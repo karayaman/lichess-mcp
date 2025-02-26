@@ -1,0 +1,30 @@
+{
+  "name": "lichess-mcp",
+  "version": "0.1.0",
+  "description": "Lichess Model Context Protocol integration - interact with Lichess API through natural language",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "lichess-mcp": "./build/index.js"
+  },
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+    "prepare": "npm run build",
+    "watch": "tsc --watch",
+    "inspector": "npx @modelcontextprotocol/inspector build/index.js",
+    "start": "node ./build/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "0.6.0",
+    "dotenv": "^16.3.1",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "@types/node-fetch": "^2.6.11",
+    "typescript": "^5.3.3"
+  }
+}
