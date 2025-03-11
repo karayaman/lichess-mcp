@@ -4,6 +4,10 @@ Speak to Lichess in natural language to interact with the chess platform. Use it
 
 Built using the [Model Context Protocol](https://github.com/modelcontextprotocol).
 
+<a href="https://glama.ai/mcp/servers/x7iuw37s1v">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/x7iuw37s1v/badge" alt="Lichess MCP server" />
+</a>
+
 The server enables:
 
 - Managing your Lichess account
