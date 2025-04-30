@@ -1,5 +1,7 @@
 # Lichess MCP
 
+[![smithery badge](https://smithery.ai/badge/@karayaman/lichess-mcp)](https://smithery.ai/server/@karayaman/lichess-mcp)
+
 Speak to Lichess in natural language to interact with the chess platform. Use it with Claude Desktop to play games, analyze positions, and manage your chess activities.
 
 Built using the [Model Context Protocol](https://github.com/modelcontextprotocol).
@@ -151,6 +153,15 @@ The server provides detailed error messages for:
 
 ## Setup Instructions
 
+### Installing via Smithery
+
+To install Lichess Integration for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@karayaman/lichess-mcp):
+
+```bash
+npx -y @smithery/cli install @karayaman/lichess-mcp --client claude
+```
+
+### Manual Installation
 1. Clone the repository:
 
    ```bash
