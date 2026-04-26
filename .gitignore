@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Build output
+build/
+dist/
+
+# Test coverage
+coverage/
+*.lcov
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Editor & IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Claude Code local settings (machine-specific, may contain secrets)
+.claude/settings.local.json
