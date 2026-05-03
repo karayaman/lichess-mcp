@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lichess Puzzle</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class="board-wrap"><div id="board"></div></div>
+      <div class="panel">
+        <h3 id="title">Puzzle</h3>
+        <div class="meta" id="progress"></div>
+        <div class="meta" id="meta"></div>
+        <div class="status" id="status">Your move.</div>
+        <div class="controls" id="controls">
+          <button id="hint">Hint</button>
+          <button id="flip">Flip</button>
+          <button id="next" class="primary">Next puzzle</button>
+        </div>
+        <div id="results" style="display:none"></div>
+        <div class="meta">
+          <a id="lichess-link" href="#" target="_blank" rel="noopener">View on lichess.org</a>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

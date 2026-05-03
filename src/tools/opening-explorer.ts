@@ -1,7 +1,58 @@
 import { z } from "zod";
 import { AnyToolDefinition, tool } from "../registry.js";
+import type { LichessClient } from "../http/client.js";
 
-const EXPLORER_BASE = "https://explorer.lichess.org";
+export const EXPLORER_BASE = "https://explorer.lichess.org";
+
+export interface MastersExplorerArgs {
+  fen?: string;
+  play?: string;
+  since?: string;
+  until?: string;
+  moves?: number;
+  topGames?: number;
+}
+
+export function fetchMastersExplorer<T = unknown>(
+  args: MastersExplorerArgs,
+  client: LichessClient,
+): Promise<T> {
+  const params = new URLSearchParams();
+  if (args.fen) params.set("fen", args.fen);
+  if (args.play) params.set("play", args.play);
+  if (args.since) params.set("since", args.since);
+  if (args.until) params.set("until", args.until);
+  if (args.moves !== undefined) params.set("moves", String(args.moves));
+  if (args.topGames !== undefined) params.set("topGames", String(args.topGames));
+  const qs = params.toString() ? `?${params.toString()}` : "";
+  return client.json<T>(`/masters${qs}`, { baseUrl: EXPLORER_BASE });
+}
+
+export interface LichessExplorerArgs {
+  variant?: string;
+  fen?: string;
+  play?: string;
+  speeds?: string;
+  ratings?: string;
+  since?: string;
+  until?: string;
+  moves?: number;
+  topGames?: number;
+  recentGames?: number;
+  history?: boolean;
+}
+
+export function fetchLichessExplorer<T = unknown>(
+  args: LichessExplorerArgs,
+  client: LichessClient,
+): Promise<T> {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(args)) {
+    if (value !== undefined) params.set(key, String(value));
+  }
+  const qs = params.toString() ? `?${params.toString()}` : "";
+  return client.json<T>(`/lichess${qs}`, { baseUrl: EXPLORER_BASE });
+}
 
 const getMastersOpenings = tool({
   name: "get_masters_openings",
@@ -14,17 +65,7 @@ const getMastersOpenings = tool({
     moves: z.number().int().min(1).optional().describe("Number of most-played moves to return"),
     topGames: z.number().int().min(0).optional().describe("Number of top games to return"),
   }),
-  handler: async ({ fen, play, since, until, moves, topGames }, { client }) => {
-    const params = new URLSearchParams();
-    if (fen) params.set("fen", fen);
-    if (play) params.set("play", play);
-    if (since) params.set("since", since);
-    if (until) params.set("until", until);
-    if (moves !== undefined) params.set("moves", String(moves));
-    if (topGames !== undefined) params.set("topGames", String(topGames));
-    const qs = params.toString() ? `?${params.toString()}` : "";
-    return client.json(`/masters${qs}`, { baseUrl: EXPLORER_BASE });
-  },
+  handler: async (args, { client }) => fetchMastersExplorer(args, client),
 });
 
 const getLichessOpenings = tool({
@@ -43,14 +84,7 @@ const getLichessOpenings = tool({
     recentGames: z.number().int().min(0).optional().describe("Number of recent games"),
     history: z.boolean().optional().describe("Include history data"),
   }),
-  handler: async (args, { client }) => {
-    const params = new URLSearchParams();
-    for (const [key, value] of Object.entries(args)) {
-      if (value !== undefined) params.set(key, String(value));
-    }
-    const qs = params.toString() ? `?${params.toString()}` : "";
-    return client.json(`/lichess${qs}`, { baseUrl: EXPLORER_BASE });
-  },
+  handler: async (args, { client }) => fetchLichessExplorer(args, client),
 });
 
 const getPlayerOpenings = tool({
