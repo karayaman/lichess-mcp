@@ -1,5 +1,6 @@
 import { AnyToolDefinition } from "../registry.js";
 import { accountTools } from "./account.js";
+import { appTools } from "./apps/index.js";
 import { analysisTools } from "./analysis.js";
 import { arenaTools } from "./arena.js";
 import { boardTools } from "./board.js";
@@ -47,4 +48,5 @@ export const allTools: AnyToolDefinition[] = [
   ...puzzlesTools,
   ...tvTools,
   ...analysisTools,
+  ...appTools,
 ];

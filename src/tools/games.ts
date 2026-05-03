@@ -35,8 +35,9 @@ function appendBooleanParams(
 async function pgnOrJsonToText(
   client: LichessClient,
   path: string,
+  options: { baseUrl?: string } = {},
 ): Promise<string> {
-  const result = await client.pgnOrJson(path);
+  const result = await client.pgnOrJson(path, options);
   return result.kind === "pgn" ? result.pgn : JSON.stringify(result.data, null, 2);
 }
 
@@ -59,7 +60,11 @@ const exportGame = tool({
   handler: async ({ gameId, ...flags }, { client }) => {
     const params = new URLSearchParams();
     appendBooleanParams(params, flags);
-    return pgnOrJsonToText(client, `/game/export/${gameId}?${params.toString()}`);
+    // /game/export/{id} lives at the site root, NOT under /api — calling
+    // /api/game/export/{id} returns 404.
+    return pgnOrJsonToText(client, `/game/export/${gameId}?${params.toString()}`, {
+      baseUrl: "https://lichess.org",
+    });
   },
 });
 

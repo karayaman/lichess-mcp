@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PGN Viewer</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class="board-wrap"><div id="board"></div></div>
+      <div class="panel">
+        <h3 id="title">Game</h3>
+        <div class="meta" id="meta"></div>
+        <div class="controls">
+          <button id="first">⏮</button>
+          <button id="prev">◀</button>
+          <button id="play" class="primary">▶</button>
+          <button id="next">▶</button>
+          <button id="last">⏭</button>
+          <button id="flip">Flip</button>
+        </div>
+        <ol class="move-list pgn-move-list" id="moves"></ol>
+        <div class="meta"><a id="lichess-link" href="#" target="_blank" rel="noopener" style="display:none">View on lichess.org</a></div>
+      </div>
+    </div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

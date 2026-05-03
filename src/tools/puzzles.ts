@@ -57,25 +57,43 @@ const getPuzzleBatch = tool({
 
 const solvePuzzleBatch = tool({
   name: "solve_puzzle_batch",
-  description: "Submit solved puzzles from a batch",
+  description:
+    "Submit solved puzzles from a batch back to Lichess. With `rated: true` (default) the result affects the user's puzzle rating. The response contains rounds[] with per-puzzle ratingDiff and the new glicko rating.",
   schema: z.object({
     angle: z.string().trim().min(1).describe("Puzzle theme/angle"),
     solutions: z
       .array(
         z.object({
           id: z.string().describe("Puzzle ID"),
-          win: z.boolean().describe("Whether the puzzle was solved correctly"),
-          time: z.number().int().describe("Time taken in milliseconds"),
+          win: z.boolean().describe("Whether the puzzle was solved without errors"),
+          rated: z
+            .boolean()
+            .optional()
+            .default(true)
+            .describe("Whether this attempt should affect the user's rating"),
         }),
       )
       .describe("Array of puzzle solutions"),
-    nb: z.number().int().min(1).max(500).optional().describe("Number of new puzzles to return"),
+    nb: z
+      .number()
+      .int()
+      .min(0)
+      .max(50)
+      .optional()
+      .describe("If > 0, response also includes a fresh batch of N puzzles"),
   }),
   handler: async ({ angle, solutions, nb }, { client }) => {
     const qs = nb !== undefined ? `?nb=${nb}` : "";
+    const body = {
+      solutions: solutions.map((s) => ({
+        id: s.id,
+        win: s.win,
+        rated: s.rated ?? true,
+      })),
+    };
     const response = await client.postJson(
       `/puzzle/batch/${encodeURIComponent(angle)}${qs}`,
-      { solutions },
+      body,
     );
     return (await response.json()) as object;
   },

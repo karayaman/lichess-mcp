@@ -117,6 +117,25 @@ create_arena({
 });
 ```
 
+### 5. Interactive UIs (Claude Desktop)
+
+These tools open a real chess board inside the chat — drag pieces, navigate
+moves, and click through opening trees — using the [MCP Apps](https://modelcontextprotocol.io/extensions/apps/overview)
+extension. In clients without UI support, each tool falls back to a
+text response containing FEN/PGN/Lichess links.
+
+```typescript
+// Open today's daily puzzle (or a specific id) as an interactive solver.
+play_puzzle({ puzzleId: "Bmfot" });
+
+// Step through a Lichess game or raw PGN with prev/next/play controls.
+view_pgn({ gameId: "abcd1234" });
+view_pgn({ pgn: "1. e4 e5 2. Nf3 ..." });
+
+// Walk the opening tree: click moves to drill down; toggle masters/lichess.
+explore_openings({ source: "masters" });
+```
+
 ## Chess Notation
 
 ### Move Formats

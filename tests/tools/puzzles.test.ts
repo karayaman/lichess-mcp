@@ -108,14 +108,17 @@ describe("get_puzzle_batch", () => {
 });
 
 describe("solve_puzzle_batch", () => {
-  it("POSTs solutions JSON to /api/puzzle/batch/{angle}", async () => {
+  it("POSTs solutions JSON to /api/puzzle/batch/{angle} matching the spec body shape", async () => {
     const mock = installFetchMock();
-    mock.respondJson({ puzzles: [] });
+    mock.respondJson({ rounds: [] });
 
     await findTool("solve_puzzle_batch").handler(
       {
         angle: "mix",
-        solutions: [{ id: "abc", win: true, time: 3000 }],
+        solutions: [
+          { id: "abc", win: true },
+          { id: "def", win: false, rated: false },
+        ],
       },
       makeContext(),
     );
@@ -125,15 +128,18 @@ describe("solve_puzzle_batch", () => {
     expect(init.method).toBe("POST");
     expect(init.headers.get("Content-Type")).toBe("application/json");
     const body = JSON.parse(init.body as string);
-    expect(body.solutions[0].id).toBe("abc");
+    expect(body.solutions[0]).toEqual({ id: "abc", win: true, rated: true });
+    expect(body.solutions[1]).toEqual({ id: "def", win: false, rated: false });
+    // The deprecated `time` field must NOT be sent (it isn't in the spec).
+    expect(body.solutions[0]).not.toHaveProperty("time");
   });
 
   it("includes nb param in query string", async () => {
     const mock = installFetchMock();
-    mock.respondJson({ puzzles: [] });
+    mock.respondJson({ rounds: [] });
 
     await findTool("solve_puzzle_batch").handler(
-      { angle: "mix", solutions: [], nb: 10 },
+      { angle: "mix", solutions: [{ id: "x", win: true }], nb: 10 },
       makeContext(),
     );
 
