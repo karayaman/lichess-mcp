@@ -104,6 +104,20 @@ describe("create_study", () => {
   it("rejects name shorter than 2 chars (schema validation)", () => {
     expect(() => findTool("create_study").schema.parse({ name: "X" })).toThrow();
   });
+
+  it("sends the permission fields the API requires", async () => {
+    const mock = installFetchMock();
+    mock.respondJson({ id: "newStudy" });
+
+    const args = findTool("create_study").schema.parse({ name: "My Study" });
+    await findTool("create_study").handler(args, makeContext());
+
+    const [, init] = mock.mock.calls[0] as [string, RequestInit & { headers: Headers }];
+    const body = init.body?.toString() ?? "";
+    for (const field of ["explorer", "computer", "chat", "shareable", "cloneable"]) {
+      expect(body).toContain(`${field}=everyone`);
+    }
+  });
 });
 
 describe("import_study_pgn", () => {

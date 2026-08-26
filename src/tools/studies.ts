@@ -56,6 +56,11 @@ const getUserStudies = tool({
     client.ndjson(`/study/by/${encodeURIComponent(username)}`),
 });
 
+const studyPermission = z
+  .enum(["nobody", "owner", "contributor", "member", "everyone"])
+  .optional()
+  .default("everyone");
+
 const createStudy = tool({
   name: "create_study",
   description: "Create a new study",
@@ -66,9 +71,18 @@ const createStudy = tool({
       .optional()
       .default("unlisted")
       .describe("Who can view the study"),
+    explorer: studyPermission.describe("Who can use the opening explorer"),
+    computer: studyPermission.describe("Who can use computer analysis"),
+    chat: studyPermission.describe("Who can chat"),
+    shareable: studyPermission.describe("Who can share and export"),
+    cloneable: studyPermission.describe("Who can clone the study"),
   }),
-  handler: async ({ name, visibility }, { client }) => {
-    const response = await client.postForm("/study", { name, visibility });
+  handler: async ({ name, visibility, ...settings }, { client }) => {
+    const response = await client.postForm("/study", {
+      name,
+      visibility,
+      ...settings,
+    });
     return (await response.json()) as object;
   },
 });
