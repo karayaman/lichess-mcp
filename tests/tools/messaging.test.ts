@@ -21,7 +21,7 @@ describe("send_message", () => {
     );
 
     const [url, init] = mock.mock.calls[0] as [string, RequestInit & { headers: Headers }];
-    expect(url).toBe("https://lichess.org/api/inbox/alice");
+    expect(url).toBe("https://lichess.org/inbox/alice");
     expect(init.method).toBe("POST");
     expect(init.headers.get("Content-Type")).toBe("application/x-www-form-urlencoded");
     expect(init.body?.toString()).toContain("text=Hello%21");
