@@ -118,11 +118,40 @@ function parseBody(body: string, contentType: string | null): Record<string, unk
   return null;
 }
 
+/** Number of fixed (non-{param}) segments in a path template. */
+function literalSegments(template: string): number {
+  return template.split("/").filter((s) => s && !s.startsWith("{")).length;
+}
+
+/**
+ * Some endpoints live at the site root (e.g. /team/{teamId}/join), and sending
+ * them under /api gets a 404. Such a path can still fit a looser /api template
+ * (/api/broadcast/b1/players/p1 fits /api/broadcast/{a}/{b}/{c}), so prefer the
+ * root reading when it matches more literally. Returns the root template, if so.
+ */
+function findApiPrefixMistake(ops: CompiledOp[], method: string, path: string): string | null {
+  if (!path.startsWith("/api/")) return null;
+  const best = (candidates: CompiledOp[]) =>
+    candidates.reduce<CompiledOp | null>(
+      (top, o) => (!top || literalSegments(o.template) > literalSegments(top.template) ? o : top),
+      null,
+    );
+  const root = best(ops.filter((o) => o.method === method && o.regex.test(path.slice(4))));
+  if (!root) return null;
+  const api = best(ops.filter((o) => o.method === method && o.regex.test(path)));
+  // The root template lacks the "api" segment, so count it to compare fairly.
+  if (api && literalSegments(api.template) >= literalSegments(root.template) + 1) return null;
+  return root.template;
+}
+
 export function checkRequest(request: CapturedRequest, spec: Spec): string[] {
   const url = new URL(request.url);
   const host = url.origin;
   const method = request.method.toUpperCase();
   const ops = compile(spec);
+
+  const misplaced = findApiPrefixMistake(ops, method, url.pathname);
+  if (misplaced) return [`${method} ${host}${url.pathname} API_PREFIX spec path is ${misplaced}`];
 
   const byPath = ops.filter((o) => o.regex.test(url.pathname));
   if (byPath.length === 0) return [`${method} ${host}${url.pathname} UNKNOWN_PATH`];
