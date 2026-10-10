@@ -1,0 +1,6016 @@
+{
+ "source": "https://github.com/lichess-org/api/tree/906d1a6e93ca1ba4b65c9decb3077f2431c6d55a/doc/specs/lichess-api.yaml",
+ "servers": [
+  "https://lichess.org",
+  "https://lichess.dev",
+  "http://localhost:{port}",
+  "http://l.org"
+ ],
+ "paths": {
+  "/api/users/status": {
+   "get": {
+    "parameters": [
+     {
+      "name": "ids",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "withSignal",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "withGameIds",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "withGameMetas",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/player": {
+   "get": {}
+  },
+  "/api/player/top/{nb}/{perfType}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "nb",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "perfType",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "ultraBullet",
+        "bullet",
+        "blitz",
+        "rapid",
+        "classical",
+        "chess960",
+        "crazyhouse",
+        "antichess",
+        "atomic",
+        "horde",
+        "kingOfTheHill",
+        "racingKings",
+        "threeCheck"
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "/api/user/{username}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "trophies",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "profile",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "rank",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "fideId",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/user/{username}/rating-history": {
+   "get": {
+    "parameters": [
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/user/{username}/perf/{perf}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "perf",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "ultraBullet",
+        "bullet",
+        "blitz",
+        "rapid",
+        "classical",
+        "correspondence",
+        "chess960",
+        "crazyhouse",
+        "antichess",
+        "atomic",
+        "horde",
+        "kingOfTheHill",
+        "racingKings",
+        "threeCheck"
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "/api/user/{username}/activity": {
+   "get": {
+    "parameters": [
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/puzzle/daily": {
+   "get": {}
+  },
+  "/api/puzzle/{id}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/puzzle/next": {
+   "get": {
+    "parameters": [
+     {
+      "name": "angle",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "difficulty",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "easiest",
+        "easier",
+        "normal",
+        "harder",
+        "hardest"
+       ]
+      }
+     },
+     {
+      "name": "color",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "white",
+        "black"
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "/api/puzzle/batch/{angle}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "angle",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "difficulty",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "easiest",
+        "easier",
+        "normal",
+        "harder",
+        "hardest"
+       ]
+      }
+     },
+     {
+      "name": "nb",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "color",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "white",
+        "black"
+       ]
+      }
+     }
+    ]
+   },
+   "post": {
+    "parameters": [
+     {
+      "name": "angle",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "nb",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "type": "object",
+       "properties": {
+        "solutions": {
+         "type": "array"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/puzzle/activity": {
+   "get": {
+    "parameters": [
+     {
+      "name": "max",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "before",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "since",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/puzzle/replay/{days}/{theme}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "days",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "theme",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/puzzle/dashboard/{days}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "days",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/storm/dashboard/{username}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "days",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/racer": {
+   "post": {}
+  },
+  "/api/racer/{id}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/users": {
+   "post": {
+    "parameters": [
+     {
+      "name": "profile",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "rank",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "text/plain": {
+       "type": "string"
+      }
+     }
+    }
+   }
+  },
+  "/api/account": {
+   "get": {}
+  },
+  "/api/account/email": {
+   "get": {}
+  },
+  "/api/account/preferences": {
+   "get": {}
+  },
+  "/api/account/kid": {
+   "get": {},
+   "post": {
+    "parameters": [
+     {
+      "name": "v",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/game/export/{gameId}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "Accept",
+      "in": "header",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "application/x-chess-pgn",
+        "application/json"
+       ]
+      }
+     },
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "moves",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "pgnInJson",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "tags",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "clocks",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "evals",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "accuracy",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "opening",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "division",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "literate",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "withBookmarked",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/game/{gameId}/chat": {
+   "parameters": [
+    {
+     "name": "gameId",
+     "in": "path",
+     "required": true,
+     "schema": {
+      "type": "string"
+     }
+    }
+   ],
+   "get": {}
+  },
+  "/api/user/{username}/current-game": {
+   "get": {
+    "parameters": [
+     {
+      "name": "Accept",
+      "in": "header",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "application/x-chess-pgn",
+        "application/json"
+       ]
+      }
+     },
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "moves",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "pgnInJson",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "tags",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "clocks",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "evals",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "accuracy",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "opening",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "division",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "literate",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/games/user/{username}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "Accept",
+      "in": "header",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "application/x-chess-pgn",
+        "application/x-ndjson"
+       ]
+      }
+     },
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "since",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "until",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "max",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "vs",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "rated",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "perfType",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "ultraBullet",
+        "bullet",
+        "blitz",
+        "rapid",
+        "classical",
+        "correspondence",
+        "chess960",
+        "crazyhouse",
+        "antichess",
+        "atomic",
+        "horde",
+        "kingOfTheHill",
+        "racingKings",
+        "threeCheck"
+       ]
+      }
+     },
+     {
+      "name": "color",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "white",
+        "black"
+       ]
+      }
+     },
+     {
+      "name": "analysed",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "moves",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "pgnInJson",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "tags",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "clocks",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "evals",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "accuracy",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "opening",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "division",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "ongoing",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "finished",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "literate",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "lastFen",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "withBookmarked",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "sort",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "dateAsc",
+        "dateDesc"
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "/api/games/export/_ids": {
+   "post": {
+    "parameters": [
+     {
+      "name": "Accept",
+      "in": "header",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "application/x-chess-pgn",
+        "application/x-ndjson"
+       ]
+      }
+     },
+     {
+      "name": "moves",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "pgnInJson",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "tags",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "clocks",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "evals",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "accuracy",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "opening",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "division",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "literate",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "text/plain": {
+       "type": "string"
+      }
+     }
+    }
+   }
+  },
+  "/api/stream/games-by-users": {
+   "post": {
+    "parameters": [
+     {
+      "name": "withCurrentGames",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "text/plain": {
+       "type": "string"
+      }
+     }
+    }
+   }
+  },
+  "/api/stream/games/{streamId}": {
+   "post": {
+    "parameters": [
+     {
+      "name": "streamId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "text/plain": {
+       "type": "string"
+      }
+     }
+    }
+   }
+  },
+  "/api/stream/games/{streamId}/add": {
+   "post": {
+    "parameters": [
+     {
+      "name": "streamId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "text/plain": {
+       "type": "string"
+      }
+     }
+    }
+   }
+  },
+  "/api/account/playing": {
+   "get": {
+    "parameters": [
+     {
+      "name": "nb",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/stream/game/{id}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/import": {
+   "post": {
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "properties": {
+        "pgn": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/games/export/imports": {
+   "get": {}
+  },
+  "/api/games/export/bookmarks": {
+   "get": {
+    "parameters": [
+     {
+      "name": "Accept",
+      "in": "header",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "application/x-chess-pgn",
+        "application/x-ndjson"
+       ]
+      }
+     },
+     {
+      "name": "since",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "until",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "max",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "moves",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "pgnInJson",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "tags",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "clocks",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "evals",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "accuracy",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "opening",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "division",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "literate",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "lastFen",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "sort",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "dateAsc",
+        "dateDesc"
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "/bookmark/{gameId}": {
+   "post": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "v",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/tv/channels": {
+   "get": {}
+  },
+  "/api/tv/feed": {
+   "get": {}
+  },
+  "/api/tv/{channel}/feed": {
+   "get": {
+    "parameters": [
+     {
+      "name": "channel",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/tv/{channel}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "Accept",
+      "in": "header",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "application/x-chess-pgn",
+        "application/x-ndjson"
+       ]
+      }
+     },
+     {
+      "name": "channel",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "nb",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "moves",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "pgnInJson",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "tags",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "clocks",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "opening",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/tournament": {
+   "get": {},
+   "post": {
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "required": [
+        "clockTime",
+        "clockIncrement",
+        "minutes"
+       ],
+       "properties": {
+        "name": {
+         "type": "string"
+        },
+        "clockTime": {
+         "type": "number",
+         "enum": [
+          0,
+          0.25,
+          0.5,
+          0.75,
+          1,
+          1.5,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          10,
+          15,
+          20,
+          25,
+          30,
+          40,
+          50,
+          60
+         ]
+        },
+        "clockIncrement": {
+         "type": "integer",
+         "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          10,
+          15,
+          20,
+          25,
+          30,
+          40,
+          50,
+          60
+         ]
+        },
+        "minutes": {
+         "type": "integer",
+         "enum": [
+          20,
+          25,
+          30,
+          35,
+          40,
+          45,
+          50,
+          55,
+          60,
+          70,
+          80,
+          90,
+          100,
+          110,
+          120,
+          150,
+          180,
+          210,
+          240,
+          270,
+          300,
+          330,
+          360,
+          420,
+          480,
+          540,
+          600,
+          720
+         ]
+        },
+        "waitMinutes": {
+         "type": "integer",
+         "enum": [
+          1,
+          2,
+          3,
+          5,
+          10,
+          15,
+          20,
+          30,
+          45,
+          60
+         ]
+        },
+        "startDate": {
+         "type": "integer"
+        },
+        "variant": {
+         "type": "string",
+         "enum": [
+          "standard",
+          "chess960",
+          "crazyhouse",
+          "antichess",
+          "atomic",
+          "horde",
+          "kingOfTheHill",
+          "racingKings",
+          "threeCheck",
+          "fromPosition"
+         ]
+        },
+        "rated": {
+         "type": "boolean"
+        },
+        "position": {
+         "type": "string"
+        },
+        "berserkable": {
+         "type": "boolean"
+        },
+        "streakable": {
+         "type": "boolean"
+        },
+        "hasChat": {
+         "type": "boolean"
+        },
+        "description": {
+         "type": "string"
+        },
+        "password": {
+         "type": "string"
+        },
+        "teamBattleByTeam": {
+         "type": "string"
+        },
+        "conditions.teamMember.teamId": {
+         "type": "string"
+        },
+        "conditions.minRating.rating": {
+         "type": "integer",
+         "enum": [
+          1000,
+          1100,
+          1200,
+          1300,
+          1400,
+          1500,
+          1600,
+          1700,
+          1800,
+          1900,
+          2000,
+          2100,
+          2200,
+          2300,
+          2400,
+          2500,
+          2600
+         ]
+        },
+        "conditions.maxRating.rating": {
+         "type": "integer",
+         "enum": [
+          2200,
+          2100,
+          2000,
+          1900,
+          1800,
+          1700,
+          1600,
+          1500,
+          1400,
+          1300,
+          1200,
+          1100,
+          1000,
+          900,
+          800
+         ]
+        },
+        "conditions.nbRatedGame.nb": {
+         "type": "integer",
+         "enum": [
+          0,
+          5,
+          10,
+          15,
+          20,
+          30,
+          40,
+          50,
+          75,
+          100,
+          150,
+          200
+         ]
+        },
+        "conditions.allowList": {
+         "type": "string"
+        },
+        "conditions.bots": {
+         "type": "boolean"
+        },
+        "conditions.accountAge": {
+         "type": "integer",
+         "enum": [
+          1,
+          3,
+          7,
+          14,
+          30,
+          60,
+          90,
+          180,
+          365,
+          730,
+          1095
+         ]
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/tournament/{id}": {
+   "parameters": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "schema": {
+      "type": "string"
+     }
+    }
+   ],
+   "get": {
+    "parameters": [
+     {
+      "name": "page",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   },
+   "post": {
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "required": [
+        "clockTime",
+        "clockIncrement",
+        "minutes"
+       ],
+       "properties": {
+        "name": {
+         "type": "string"
+        },
+        "clockTime": {
+         "type": "number",
+         "enum": [
+          0,
+          0.25,
+          0.5,
+          0.75,
+          1,
+          1.5,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          10,
+          15,
+          20,
+          25,
+          30,
+          40,
+          50,
+          60
+         ]
+        },
+        "clockIncrement": {
+         "type": "integer",
+         "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          10,
+          15,
+          20,
+          25,
+          30,
+          40,
+          50,
+          60
+         ]
+        },
+        "minutes": {
+         "type": "integer",
+         "enum": [
+          20,
+          25,
+          30,
+          35,
+          40,
+          45,
+          50,
+          55,
+          60,
+          70,
+          80,
+          90,
+          100,
+          110,
+          120,
+          150,
+          180,
+          210,
+          240,
+          270,
+          300,
+          330,
+          360,
+          420,
+          480,
+          540,
+          600,
+          720
+         ]
+        },
+        "waitMinutes": {
+         "type": "integer",
+         "enum": [
+          1,
+          2,
+          3,
+          5,
+          10,
+          15,
+          20,
+          30,
+          45,
+          60
+         ]
+        },
+        "startDate": {
+         "type": "integer"
+        },
+        "variant": {
+         "type": "string",
+         "enum": [
+          "standard",
+          "chess960",
+          "crazyhouse",
+          "antichess",
+          "atomic",
+          "horde",
+          "kingOfTheHill",
+          "racingKings",
+          "threeCheck",
+          "fromPosition"
+         ]
+        },
+        "rated": {
+         "type": "boolean"
+        },
+        "position": {
+         "type": "string"
+        },
+        "berserkable": {
+         "type": "boolean"
+        },
+        "streakable": {
+         "type": "boolean"
+        },
+        "hasChat": {
+         "type": "boolean"
+        },
+        "description": {
+         "type": "string"
+        },
+        "password": {
+         "type": "string"
+        },
+        "conditions.minRating.rating": {
+         "type": "integer",
+         "enum": [
+          1000,
+          1100,
+          1200,
+          1300,
+          1400,
+          1500,
+          1600,
+          1700,
+          1800,
+          1900,
+          2000,
+          2100,
+          2200,
+          2300,
+          2400,
+          2500,
+          2600
+         ]
+        },
+        "conditions.maxRating.rating": {
+         "type": "integer",
+         "enum": [
+          2200,
+          2100,
+          2000,
+          1900,
+          1800,
+          1700,
+          1600,
+          1500,
+          1400,
+          1300,
+          1200,
+          1100,
+          1000,
+          900,
+          800
+         ]
+        },
+        "conditions.nbRatedGame.nb": {
+         "type": "integer",
+         "enum": [
+          0,
+          5,
+          10,
+          15,
+          20,
+          30,
+          40,
+          50,
+          75,
+          100,
+          150,
+          200
+         ]
+        },
+        "conditions.allowList": {
+         "type": "string"
+        },
+        "conditions.bots": {
+         "type": "boolean"
+        },
+        "conditions.accountAge": {
+         "type": "integer",
+         "enum": [
+          1,
+          3,
+          7,
+          14,
+          30,
+          60,
+          90,
+          180,
+          365,
+          730,
+          1095
+         ]
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/tournament/{id}/join": {
+   "post": {
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "properties": {
+        "password": {
+         "type": "string"
+        },
+        "team": {
+         "type": "string"
+        },
+        "pairMeAsap": {
+         "type": "boolean"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/tournament/{id}/withdraw": {
+   "post": {
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/tournament/{id}/terminate": {
+   "post": {
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/tournament/team-battle/{id}": {
+   "post": {
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "required": [
+        "teams",
+        "nbLeaders"
+       ],
+       "properties": {
+        "teams": {
+         "type": "string"
+        },
+        "nbLeaders": {
+         "type": "integer"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/tournament/{id}/games": {
+   "get": {
+    "parameters": [
+     {
+      "name": "Accept",
+      "in": "header",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "application/x-chess-pgn",
+        "application/x-ndjson"
+       ]
+      }
+     },
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "player",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "moves",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "pgnInJson",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "tags",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "clocks",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "evals",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "accuracy",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "opening",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "division",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/tournament/{id}/results": {
+   "get": {
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "nb",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "sheet",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/tournament/{id}/teams": {
+   "get": {
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/user/{username}/tournament/created": {
+   "get": {
+    "parameters": [
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "nb",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "status",
+      "in": "query",
+      "schema": {
+       "type": "integer",
+       "enum": [
+        10,
+        20,
+        30
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "/api/user/{username}/tournament/played": {
+   "get": {
+    "parameters": [
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "nb",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "performance",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/swiss/new/{teamId}": {
+   "post": {
+    "parameters": [
+     {
+      "name": "teamId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "required": [
+        "clock.limit",
+        "clock.increment",
+        "nbRounds"
+       ],
+       "properties": {
+        "name": {
+         "type": "string"
+        },
+        "clock.limit": {
+         "type": "integer",
+         "enum": [
+          0,
+          15,
+          30,
+          45,
+          60,
+          90,
+          120,
+          180,
+          240,
+          300,
+          360,
+          420,
+          480,
+          600,
+          900,
+          1200,
+          1500,
+          1800,
+          2400,
+          3000,
+          3600,
+          4200,
+          4800,
+          5400,
+          6000,
+          6600,
+          7200,
+          7800,
+          8400,
+          9000,
+          9600,
+          10200,
+          10800
+         ]
+        },
+        "clock.increment": {
+         "type": "integer"
+        },
+        "nbRounds": {
+         "type": "integer"
+        },
+        "startsAt": {
+         "type": "integer"
+        },
+        "roundInterval": {
+         "type": "integer",
+         "enum": [
+          -1,
+          5,
+          10,
+          20,
+          30,
+          45,
+          60,
+          120,
+          180,
+          300,
+          600,
+          900,
+          1200,
+          1800,
+          2700,
+          3600,
+          86400,
+          172800,
+          604800,
+          99999999
+         ]
+        },
+        "variant": {
+         "type": "string",
+         "enum": [
+          "standard",
+          "chess960",
+          "crazyhouse",
+          "antichess",
+          "atomic",
+          "horde",
+          "kingOfTheHill",
+          "racingKings",
+          "threeCheck",
+          "fromPosition"
+         ]
+        },
+        "position": {
+         "type": "string"
+        },
+        "description": {
+         "type": "string"
+        },
+        "rated": {
+         "type": "boolean"
+        },
+        "password": {
+         "type": "string"
+        },
+        "forbiddenPairings": {
+         "type": "string"
+        },
+        "manualPairings": {
+         "type": "string"
+        },
+        "chatFor": {
+         "type": "integer",
+         "enum": [
+          0,
+          10,
+          20,
+          30
+         ]
+        },
+        "conditions.minRating.rating": {
+         "type": "integer",
+         "enum": [
+          1000,
+          1100,
+          1200,
+          1300,
+          1400,
+          1500,
+          1600,
+          1700,
+          1800,
+          1900,
+          2000,
+          2100,
+          2200,
+          2300,
+          2400,
+          2500,
+          2600
+         ]
+        },
+        "conditions.maxRating.rating": {
+         "type": "integer",
+         "enum": [
+          2200,
+          2100,
+          2000,
+          1900,
+          1800,
+          1700,
+          1600,
+          1500,
+          1400,
+          1300,
+          1200,
+          1100,
+          1000,
+          900,
+          800
+         ]
+        },
+        "conditions.nbRatedGame.nb": {
+         "type": "integer"
+        },
+        "conditions.playYourGames": {
+         "type": "boolean"
+        },
+        "conditions.allowList": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/swiss/{id}": {
+   "parameters": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "schema": {
+      "type": "string"
+     }
+    }
+   ],
+   "get": {}
+  },
+  "/api/swiss/{id}/edit": {
+   "post": {
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "required": [
+        "clock.limit",
+        "clock.increment",
+        "nbRounds"
+       ],
+       "properties": {
+        "name": {
+         "type": "string"
+        },
+        "clock.limit": {
+         "type": "integer",
+         "enum": [
+          0,
+          15,
+          30,
+          45,
+          60,
+          90,
+          120,
+          180,
+          240,
+          300,
+          360,
+          420,
+          480,
+          600,
+          900,
+          1200,
+          1500,
+          1800,
+          2400,
+          3000,
+          3600,
+          4200,
+          4800,
+          5400,
+          6000,
+          6600,
+          7200,
+          7800,
+          8400,
+          9000,
+          9600,
+          10200,
+          10800
+         ]
+        },
+        "clock.increment": {
+         "type": "integer"
+        },
+        "nbRounds": {
+         "type": "integer"
+        },
+        "startsAt": {
+         "type": "integer"
+        },
+        "roundInterval": {
+         "type": "integer",
+         "enum": [
+          -1,
+          5,
+          10,
+          20,
+          30,
+          45,
+          60,
+          120,
+          180,
+          300,
+          600,
+          900,
+          1200,
+          1800,
+          2700,
+          3600,
+          86400,
+          172800,
+          604800,
+          99999999
+         ]
+        },
+        "variant": {
+         "type": "string",
+         "enum": [
+          "standard",
+          "chess960",
+          "crazyhouse",
+          "antichess",
+          "atomic",
+          "horde",
+          "kingOfTheHill",
+          "racingKings",
+          "threeCheck",
+          "fromPosition"
+         ]
+        },
+        "position": {
+         "type": "string"
+        },
+        "description": {
+         "type": "string"
+        },
+        "rated": {
+         "type": "boolean"
+        },
+        "password": {
+         "type": "string"
+        },
+        "forbiddenPairings": {
+         "type": "string"
+        },
+        "manualPairings": {
+         "type": "string"
+        },
+        "chatFor": {
+         "type": "integer",
+         "enum": [
+          0,
+          10,
+          20,
+          30
+         ]
+        },
+        "conditions.minRating.rating": {
+         "type": "integer",
+         "enum": [
+          1000,
+          1100,
+          1200,
+          1300,
+          1400,
+          1500,
+          1600,
+          1700,
+          1800,
+          1900,
+          2000,
+          2100,
+          2200,
+          2300,
+          2400,
+          2500,
+          2600
+         ]
+        },
+        "conditions.maxRating.rating": {
+         "type": "integer",
+         "enum": [
+          2200,
+          2100,
+          2000,
+          1900,
+          1800,
+          1700,
+          1600,
+          1500,
+          1400,
+          1300,
+          1200,
+          1100,
+          1000,
+          900,
+          800
+         ]
+        },
+        "conditions.nbRatedGame.nb": {
+         "type": "integer"
+        },
+        "conditions.playYourGames": {
+         "type": "boolean"
+        },
+        "conditions.allowList": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/swiss/{id}/schedule-next-round": {
+   "post": {
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "properties": {
+        "date": {
+         "type": "integer"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/swiss/{id}/join": {
+   "post": {
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "properties": {
+        "password": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/swiss/{id}/withdraw": {
+   "post": {
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/swiss/{id}/terminate": {
+   "post": {
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/swiss/{id}.trf": {
+   "get": {
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/swiss/{id}/games": {
+   "get": {
+    "parameters": [
+     {
+      "name": "Accept",
+      "in": "header",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "application/x-chess-pgn",
+        "application/x-ndjson"
+       ]
+      }
+     },
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "player",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "moves",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "pgnInJson",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "tags",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "clocks",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "evals",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "accuracy",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "opening",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "division",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/swiss/{id}/results": {
+   "get": {
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "nb",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/team/{teamId}/swiss": {
+   "get": {
+    "parameters": [
+     {
+      "name": "teamId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "max",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "status",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "created",
+        "started",
+        "finished"
+       ]
+      }
+     },
+     {
+      "name": "createdBy",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "name",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/study/{studyId}/{chapterId}.pgn": {
+   "get": {
+    "parameters": [
+     {
+      "name": "studyId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "chapterId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "clocks",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "comments",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "variations",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "orientation",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/study/{studyId}.pgn": {
+   "get": {
+    "parameters": [
+     {
+      "name": "studyId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "clocks",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "comments",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "variations",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "orientation",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/study": {
+   "post": {
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "required": [
+        "name",
+        "visibility",
+        "computer",
+        "explorer",
+        "cloneable",
+        "shareable",
+        "chat"
+       ],
+       "properties": {
+        "name": {
+         "type": "string"
+        },
+        "visibility": {
+         "type": "string",
+         "enum": [
+          "public",
+          "unlisted",
+          "private"
+         ]
+        },
+        "flair": {
+         "type": "string"
+        },
+        "computer": {
+         "type": "string",
+         "enum": [
+          "nobody",
+          "owner",
+          "contributor",
+          "member",
+          "everyone"
+         ]
+        },
+        "explorer": {
+         "type": "string",
+         "enum": [
+          "nobody",
+          "owner",
+          "contributor",
+          "member",
+          "everyone"
+         ]
+        },
+        "cloneable": {
+         "type": "string",
+         "enum": [
+          "nobody",
+          "owner",
+          "contributor",
+          "member",
+          "everyone"
+         ]
+        },
+        "shareable": {
+         "type": "string",
+         "enum": [
+          "nobody",
+          "owner",
+          "contributor",
+          "member",
+          "everyone"
+         ]
+        },
+        "chat": {
+         "type": "string",
+         "enum": [
+          "nobody",
+          "owner",
+          "contributor",
+          "member",
+          "everyone"
+         ]
+        },
+        "sticky": {
+         "type": "boolean"
+        },
+        "description": {
+         "type": "boolean"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/study/{studyId}/import-pgn": {
+   "post": {
+    "parameters": [
+     {
+      "name": "studyId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "required": [
+        "pgn"
+       ],
+       "properties": {
+        "pgn": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        },
+        "orientation": {
+         "type": "string",
+         "enum": [
+          "white",
+          "black"
+         ]
+        },
+        "variant": {
+         "type": "string",
+         "enum": [
+          "standard",
+          "chess960",
+          "crazyhouse",
+          "antichess",
+          "atomic",
+          "horde",
+          "kingOfTheHill",
+          "racingKings",
+          "threeCheck",
+          "fromPosition"
+         ]
+        },
+        "mode": {
+         "type": "string",
+         "enum": [
+          "practice",
+          "conceal",
+          "gamebook"
+         ]
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/study/{studyId}/{chapterId}/tags": {
+   "post": {
+    "parameters": [
+     {
+      "name": "studyId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "chapterId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "required": [
+        "pgn"
+       ],
+       "properties": {
+        "pgn": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/study/{studyId}/{chapterId}/moves": {
+   "post": {
+    "parameters": [
+     {
+      "name": "studyId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "chapterId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "required": [
+        "pgn"
+       ],
+       "properties": {
+        "pgn": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/study/by/{username}/export.pgn": {
+   "get": {
+    "parameters": [
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "clocks",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "comments",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "variations",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "orientation",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/study/by/{username}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/study/{studyId}/{chapterId}": {
+   "delete": {
+    "parameters": [
+     {
+      "name": "studyId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "chapterId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/broadcast": {
+   "get": {
+    "parameters": [
+     {
+      "name": "nb",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "html",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "live",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/broadcast/top": {
+   "get": {
+    "parameters": [
+     {
+      "name": "page",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "html",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/broadcast/by/{username}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "page",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "html",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/broadcast/search": {
+   "get": {
+    "parameters": [
+     {
+      "name": "page",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "q",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/broadcast/new": {
+   "post": {
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "required": [
+        "name"
+       ],
+       "properties": {
+        "name": {
+         "type": "string"
+        },
+        "info": {
+         "type": "object",
+         "properties": {
+          "format": {
+           "type": "string"
+          },
+          "tc": {
+           "type": "string"
+          },
+          "fideTC": {
+           "type": "string",
+           "enum": [
+            "standard",
+            "rapid",
+            "blitz"
+           ]
+          },
+          "timeZone": {
+           "type": "string"
+          },
+          "location": {
+           "type": "string"
+          },
+          "players": {
+           "type": "string"
+          },
+          "website": {
+           "type": "string"
+          },
+          "standings": {
+           "type": "string"
+          },
+          "regulations": {
+           "type": "string"
+          }
+         }
+        },
+        "markdown": {
+         "type": "string"
+        },
+        "showScores": {
+         "type": "boolean"
+        },
+        "showRatingDiffs": {
+         "type": "boolean"
+        },
+        "teamTable": {
+         "type": "boolean"
+        },
+        "visibility": {
+         "type": "string",
+         "enum": [
+          "public",
+          "unlisted",
+          "private"
+         ]
+        },
+        "players": {
+         "type": "string"
+        },
+        "teams": {
+         "type": "string"
+        },
+        "tier": {
+         "type": "integer",
+         "enum": [
+          3,
+          4,
+          5
+         ]
+        },
+        "tiebreaks": {
+         "type": "array"
+        },
+        "grouping": {
+         "type": "object",
+         "properties": {
+          "info": {
+           "type": "object",
+           "properties": {
+            "name": {
+             "type": "string"
+            },
+            "tours": {
+             "type": "string"
+            }
+           }
+          },
+          "scoreGroups": {
+           "type": "array"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/broadcast/{broadcastTournamentId}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "broadcastTournamentId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/broadcast/{broadcastTournamentId}/players": {
+   "get": {
+    "parameters": [
+     {
+      "name": "broadcastTournamentId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/broadcast/{broadcastTournamentId}/players/{playerId}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "broadcastTournamentId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "playerId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/broadcast/{broadcastTournamentId}/teams/standings": {
+   "get": {
+    "parameters": [
+     {
+      "name": "broadcastTournamentId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/broadcast/{broadcastTournamentId}/edit": {
+   "post": {
+    "parameters": [
+     {
+      "name": "broadcastTournamentId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "required": [
+        "name"
+       ],
+       "properties": {
+        "name": {
+         "type": "string"
+        },
+        "info": {
+         "type": "object",
+         "properties": {
+          "format": {
+           "type": "string"
+          },
+          "tc": {
+           "type": "string"
+          },
+          "fideTC": {
+           "type": "string",
+           "enum": [
+            "standard",
+            "rapid",
+            "blitz"
+           ]
+          },
+          "timeZone": {
+           "type": "string"
+          },
+          "location": {
+           "type": "string"
+          },
+          "players": {
+           "type": "string"
+          },
+          "website": {
+           "type": "string"
+          },
+          "standings": {
+           "type": "string"
+          },
+          "regulations": {
+           "type": "string"
+          }
+         }
+        },
+        "markdown": {
+         "type": "string"
+        },
+        "showScores": {
+         "type": "boolean"
+        },
+        "showRatingDiffs": {
+         "type": "boolean"
+        },
+        "teamTable": {
+         "type": "boolean"
+        },
+        "visibility": {
+         "type": "string",
+         "enum": [
+          "public",
+          "unlisted",
+          "private"
+         ]
+        },
+        "players": {
+         "type": "string"
+        },
+        "teams": {
+         "type": "string"
+        },
+        "tier": {
+         "type": "integer",
+         "enum": [
+          3,
+          4,
+          5
+         ]
+        },
+        "tiebreaks": {
+         "type": "array"
+        },
+        "grouping": {
+         "type": "object",
+         "properties": {
+          "info": {
+           "type": "object",
+           "properties": {
+            "name": {
+             "type": "string"
+            },
+            "tours": {
+             "type": "string"
+            }
+           }
+          },
+          "scoreGroups": {
+           "type": "array"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/broadcast/{broadcastTournamentId}/new": {
+   "post": {
+    "parameters": [
+     {
+      "name": "broadcastTournamentId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {}
+     }
+    }
+   }
+  },
+  "/api/broadcast/{broadcastTournamentSlug}/{broadcastRoundSlug}/{broadcastRoundId}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "broadcastTournamentSlug",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "broadcastRoundSlug",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "broadcastRoundId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/broadcast/round/{broadcastRoundId}/edit": {
+   "post": {
+    "parameters": [
+     {
+      "name": "broadcastRoundId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "patch",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {}
+     }
+    }
+   }
+  },
+  "/api/broadcast/round/{broadcastRoundId}/reset": {
+   "post": {
+    "parameters": [
+     {
+      "name": "broadcastRoundId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/broadcast/round/{broadcastRoundId}/push": {
+   "post": {
+    "parameters": [
+     {
+      "name": "broadcastRoundId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "text/plain": {
+       "type": "string"
+      }
+     }
+    }
+   }
+  },
+  "/api/stream/broadcast/round/{broadcastRoundId}.pgn": {
+   "get": {
+    "parameters": [
+     {
+      "name": "broadcastRoundId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "clocks",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "comments",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/stream/broadcast/tour/{broadcastTourId}.pgn": {
+   "get": {
+    "parameters": [
+     {
+      "name": "broadcastTourId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "clocks",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "comments",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/stream/broadcast/group/{broadcastGroupId}.pgn": {
+   "get": {
+    "parameters": [
+     {
+      "name": "broadcastGroupId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "clocks",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "comments",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/broadcast/round/{broadcastRoundId}.pgn": {
+   "get": {
+    "parameters": [
+     {
+      "name": "broadcastRoundId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "clocks",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "comments",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/broadcast/{broadcastTournamentId}.pgn": {
+   "get": {
+    "parameters": [
+     {
+      "name": "broadcastTournamentId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "clocks",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "comments",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/broadcast/my-rounds": {
+   "get": {
+    "parameters": [
+     {
+      "name": "nb",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/fide/player/{playerId}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "playerId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/fide/player/{playerId}/ratings": {
+   "get": {
+    "parameters": [
+     {
+      "name": "playerId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/fide/player": {
+   "get": {
+    "parameters": [
+     {
+      "name": "q",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/simul": {
+   "get": {}
+  },
+  "/api/team/{teamId}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "teamId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/team/all": {
+   "get": {
+    "parameters": [
+     {
+      "name": "page",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/team/of/{username}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/team/search": {
+   "get": {
+    "parameters": [
+     {
+      "name": "text",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "page",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/team/{teamId}/users": {
+   "get": {
+    "parameters": [
+     {
+      "name": "teamId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "full",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/team/{teamId}/arena": {
+   "get": {
+    "parameters": [
+     {
+      "name": "teamId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "max",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "status",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "created",
+        "started",
+        "finished"
+       ]
+      }
+     },
+     {
+      "name": "createdBy",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "name",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/team/{teamId}/join": {
+   "post": {
+    "parameters": [
+     {
+      "name": "teamId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "properties": {
+        "message": {
+         "type": "string"
+        },
+        "password": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/team/{teamId}/quit": {
+   "post": {
+    "parameters": [
+     {
+      "name": "teamId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/team/{teamId}/requests": {
+   "get": {
+    "parameters": [
+     {
+      "name": "teamId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "declined",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/team/{teamId}/request/{userId}/accept": {
+   "post": {
+    "parameters": [
+     {
+      "name": "teamId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "userId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/team/{teamId}/request/{userId}/decline": {
+   "post": {
+    "parameters": [
+     {
+      "name": "teamId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "userId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/team/{teamId}/kick/{userId}": {
+   "post": {
+    "parameters": [
+     {
+      "name": "teamId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "userId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/team/updates": {
+   "get": {
+    "parameters": [
+     {
+      "name": "page",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/team/updates/{teamId}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "teamId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "page",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/team/{teamId}/pm-all": {
+   "post": {
+    "parameters": [
+     {
+      "name": "teamId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "properties": {
+        "message": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/streamer/live": {
+   "get": {}
+  },
+  "/api/crosstable/{user1}/{user2}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "user1",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "user2",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "matchup",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/player/autocomplete": {
+   "get": {
+    "parameters": [
+     {
+      "name": "term",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "exists",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "object",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "names",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "friend",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "team",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "tour",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "swiss",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "teacher",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/user/{username}/note": {
+   "get": {
+    "parameters": [
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   },
+   "post": {
+    "parameters": [
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "required": [
+        "text"
+       ],
+       "properties": {
+        "text": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/rel/following": {
+   "get": {}
+  },
+  "/api/rel/follow/{username}": {
+   "post": {
+    "parameters": [
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/rel/unfollow/{username}": {
+   "post": {
+    "parameters": [
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/rel/block/{username}": {
+   "post": {
+    "parameters": [
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/rel/unblock/{username}": {
+   "post": {
+    "parameters": [
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/stream/event": {
+   "get": {}
+  },
+  "/api/board/seek": {
+   "post": {
+    "requestBody": {
+     "content": {
+      "application/x-www-form-urlencoded": {}
+     }
+    }
+   }
+  },
+  "/api/board/game/stream/{gameId}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/board/game/{gameId}/move/{move}": {
+   "post": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "move",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "offeringDraw",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/board/game/{gameId}/chat": {
+   "parameters": [
+    {
+     "name": "gameId",
+     "in": "path",
+     "required": true,
+     "schema": {
+      "type": "string"
+     }
+    }
+   ],
+   "get": {},
+   "post": {
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "required": [
+        "room",
+        "text"
+       ],
+       "properties": {
+        "room": {
+         "type": "string",
+         "enum": [
+          "player",
+          "spectator"
+         ]
+        },
+        "text": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/board/game/{gameId}/abort": {
+   "post": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/board/game/{gameId}/resign": {
+   "post": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/board/game/{gameId}/draw/{accept}": {
+   "post": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "accept",
+      "in": "path",
+      "required": true
+     }
+    ]
+   }
+  },
+  "/api/board/game/{gameId}/takeback/{accept}": {
+   "post": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "accept",
+      "in": "path",
+      "required": true
+     }
+    ]
+   }
+  },
+  "/api/board/game/{gameId}/claim-victory": {
+   "post": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/board/game/{gameId}/claim-draw": {
+   "post": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/board/game/{gameId}/berserk": {
+   "post": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/bot/online": {
+   "get": {
+    "parameters": [
+     {
+      "name": "nb",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/bot/account/upgrade": {
+   "post": {}
+  },
+  "/api/bot/game/stream/{gameId}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/bot/game/{gameId}/move/{move}": {
+   "post": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "move",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "offeringDraw",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/bot/game/{gameId}/chat": {
+   "get": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   },
+   "post": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "required": [
+        "room",
+        "text"
+       ],
+       "properties": {
+        "room": {
+         "type": "string",
+         "enum": [
+          "player",
+          "spectator"
+         ]
+        },
+        "text": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/bot/game/{gameId}/abort": {
+   "post": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/bot/game/{gameId}/resign": {
+   "post": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/bot/game/{gameId}/draw/{accept}": {
+   "post": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "accept",
+      "in": "path",
+      "required": true
+     }
+    ]
+   }
+  },
+  "/api/bot/game/{gameId}/takeback/{accept}": {
+   "post": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "accept",
+      "in": "path",
+      "required": true
+     }
+    ]
+   }
+  },
+  "/api/bot/game/{gameId}/claim-victory": {
+   "post": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/bot/game/{gameId}/claim-draw": {
+   "post": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/challenge": {
+   "get": {}
+  },
+  "/api/challenge/{username}": {
+   "post": {
+    "parameters": [
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/x-www-form-urlencoded": {}
+     }
+    }
+   }
+  },
+  "/api/challenge/{challengeId}/show": {
+   "get": {
+    "parameters": [
+     {
+      "name": "challengeId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/challenge/{challengeId}/accept": {
+   "post": {
+    "parameters": [
+     {
+      "name": "challengeId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "color",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "white",
+        "black"
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "/api/challenge/{challengeId}/decline": {
+   "post": {
+    "parameters": [
+     {
+      "name": "challengeId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "properties": {
+        "reason": {
+         "type": "string",
+         "enum": [
+          "generic",
+          "later",
+          "tooFast",
+          "tooSlow",
+          "timeControl",
+          "rated",
+          "casual",
+          "standard",
+          "variant",
+          "noBot",
+          "onlyBot"
+         ]
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/challenge/{challengeId}/cancel": {
+   "post": {
+    "parameters": [
+     {
+      "name": "challengeId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "opponentToken",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/challenge/ai": {
+   "post": {
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "required": [
+        "level"
+       ],
+       "properties": {
+        "level": {
+         "type": "integer"
+        },
+        "clock.limit": {
+         "type": "integer"
+        },
+        "clock.increment": {
+         "type": "integer"
+        },
+        "days": {
+         "type": "integer",
+         "enum": [
+          1,
+          2,
+          3,
+          5,
+          7,
+          10,
+          14
+         ]
+        },
+        "color": {
+         "type": "string",
+         "enum": [
+          "white",
+          "black",
+          "random"
+         ]
+        },
+        "variant": {
+         "type": "string",
+         "enum": [
+          "standard",
+          "chess960",
+          "crazyhouse",
+          "antichess",
+          "atomic",
+          "horde",
+          "kingOfTheHill",
+          "racingKings",
+          "threeCheck",
+          "fromPosition"
+         ]
+        },
+        "fen": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/challenge/open": {
+   "post": {
+    "requestBody": {
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "properties": {
+        "rated": {
+         "type": "boolean"
+        },
+        "clock.limit": {
+         "type": "integer"
+        },
+        "clock.increment": {
+         "type": "integer"
+        },
+        "days": {
+         "type": "integer",
+         "enum": [
+          1,
+          2,
+          3,
+          5,
+          7,
+          10,
+          14
+         ]
+        },
+        "variant": {
+         "type": "string",
+         "enum": [
+          "standard",
+          "chess960",
+          "crazyhouse",
+          "antichess",
+          "atomic",
+          "horde",
+          "kingOfTheHill",
+          "racingKings",
+          "threeCheck",
+          "fromPosition"
+         ]
+        },
+        "fen": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        },
+        "rules": {
+         "type": "string",
+         "enum": [
+          "noRematch",
+          "noGiveTime",
+          "noClaimWin",
+          "noEarlyDraw",
+          "noAbort"
+         ]
+        },
+        "users": {
+         "type": "string"
+        },
+        "expiresAt": {
+         "type": "integer"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/challenge/{gameId}/start-clocks": {
+   "post": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "token1",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "token2",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/bulk-pairing": {
+   "get": {},
+   "post": {
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "properties": {
+        "players": {
+         "type": "string"
+        },
+        "clock.limit": {
+         "type": "integer"
+        },
+        "clock.increment": {
+         "type": "integer"
+        },
+        "days": {
+         "type": "integer",
+         "enum": [
+          1,
+          2,
+          3,
+          5,
+          7,
+          10,
+          14
+         ]
+        },
+        "pairAt": {
+         "type": "integer"
+        },
+        "startClocksAt": {
+         "type": "integer"
+        },
+        "rated": {
+         "type": "boolean"
+        },
+        "variant": {
+         "type": "string",
+         "enum": [
+          "standard",
+          "chess960",
+          "crazyhouse",
+          "antichess",
+          "atomic",
+          "horde",
+          "kingOfTheHill",
+          "racingKings",
+          "threeCheck",
+          "fromPosition"
+         ]
+        },
+        "fen": {
+         "type": "string"
+        },
+        "message": {
+         "type": "string"
+        },
+        "rules": {
+         "type": "string",
+         "enum": [
+          "noAbort",
+          "noRematch",
+          "noGiveTime",
+          "noClaimWin",
+          "noEarlyDraw"
+         ]
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/bulk-pairing/{id}/start-clocks": {
+   "post": {
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/bulk-pairing/{id}": {
+   "get": {
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   },
+   "delete": {
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/bulk-pairing/{id}/games": {
+   "get": {
+    "parameters": [
+     {
+      "name": "Accept",
+      "in": "header",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "application/x-chess-pgn",
+        "application/x-ndjson"
+       ]
+      }
+     },
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "moves",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "pgnInJson",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "tags",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "clocks",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "evals",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "accuracy",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "opening",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "division",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "literate",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/api/round/{gameId}/add-time/{seconds}": {
+   "post": {
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "seconds",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/token/admin-challenge": {
+   "post": {
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "required": [
+        "users",
+        "description"
+       ],
+       "properties": {
+        "users": {
+         "type": "string"
+        },
+        "description": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/inbox/{username}": {
+   "post": {
+    "parameters": [
+     {
+      "name": "username",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "required": [
+        "text"
+       ],
+       "properties": {
+        "text": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/cloud-eval": {
+   "get": {
+    "parameters": [
+     {
+      "name": "fen",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "multiPv",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "variant",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "standard",
+        "chess960",
+        "crazyhouse",
+        "antichess",
+        "atomic",
+        "horde",
+        "kingOfTheHill",
+        "racingKings",
+        "threeCheck",
+        "fromPosition"
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "/api/external-engine": {
+   "get": {},
+   "post": {
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "type": "object",
+       "required": [
+        "name",
+        "maxThreads",
+        "maxHash",
+        "providerSecret"
+       ],
+       "properties": {
+        "name": {
+         "type": "string"
+        },
+        "maxThreads": {
+         "type": "integer"
+        },
+        "maxHash": {
+         "type": "integer"
+        },
+        "variants": {
+         "type": "array"
+        },
+        "providerSecret": {
+         "type": "string"
+        },
+        "providerData": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/external-engine/{id}": {
+   "parameters": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "schema": {
+      "type": "string"
+     }
+    }
+   ],
+   "get": {},
+   "put": {
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "type": "object",
+       "required": [
+        "name",
+        "maxThreads",
+        "maxHash",
+        "providerSecret"
+       ],
+       "properties": {
+        "name": {
+         "type": "string"
+        },
+        "maxThreads": {
+         "type": "integer"
+        },
+        "maxHash": {
+         "type": "integer"
+        },
+        "variants": {
+         "type": "array"
+        },
+        "providerSecret": {
+         "type": "string"
+        },
+        "providerData": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {}
+  },
+  "/api/external-engine/{id}/analyse": {
+   "parameters": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "schema": {
+      "type": "string"
+     }
+    }
+   ],
+   "post": {
+    "servers": [
+     "https://engine.lichess.ovh",
+     "http://localhost:{port}"
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "type": "object",
+       "required": [
+        "clientSecret",
+        "work"
+       ],
+       "properties": {
+        "clientSecret": {
+         "type": "string"
+        },
+        "work": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/external-engine/work": {
+   "post": {
+    "servers": [
+     "https://engine.lichess.ovh",
+     "http://localhost:{port}"
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "type": "object",
+       "required": [
+        "providerSecret"
+       ],
+       "properties": {
+        "providerSecret": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/external-engine/work/{id}": {
+   "parameters": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "schema": {
+      "type": "string"
+     }
+    }
+   ],
+   "post": {
+    "servers": [
+     "https://engine.lichess.ovh",
+     "http://localhost:{port}"
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "text/plain": {
+       "type": "string"
+      }
+     }
+    }
+   }
+  },
+  "/oauth": {
+   "get": {
+    "parameters": [
+     {
+      "name": "response_type",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "client_id",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "redirect_uri",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "code_challenge_method",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "code_challenge",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "scope",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "username",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "state",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/token": {
+   "post": {
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/x-www-form-urlencoded": {
+       "type": "object",
+       "properties": {
+        "grant_type": {
+         "type": "string"
+        },
+        "code": {
+         "type": "string"
+        },
+        "code_verifier": {
+         "type": "string"
+        },
+        "redirect_uri": {
+         "type": "string"
+        },
+        "client_id": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {}
+  },
+  "/api/token/test": {
+   "post": {
+    "requestBody": {
+     "required": true,
+     "content": {
+      "text/plain": {
+       "type": "string"
+      }
+     }
+    }
+   }
+  },
+  "/masters": {
+   "get": {
+    "servers": [
+     "https://explorer.lichess.org",
+     "http://localhost:{port}"
+    ],
+    "parameters": [
+     {
+      "name": "fen",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "play",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "since",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "until",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "moves",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "topGames",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/lichess": {
+   "get": {
+    "servers": [
+     "https://explorer.lichess.org",
+     "http://localhost:{port}"
+    ],
+    "parameters": [
+     {
+      "name": "variant",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "standard",
+        "chess960",
+        "crazyhouse",
+        "antichess",
+        "atomic",
+        "horde",
+        "kingOfTheHill",
+        "racingKings",
+        "threeCheck",
+        "fromPosition"
+       ]
+      }
+     },
+     {
+      "name": "fen",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "play",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "speeds",
+      "in": "query",
+      "schema": {
+       "type": "array"
+      }
+     },
+     {
+      "name": "ratings",
+      "in": "query",
+      "schema": {
+       "type": "array"
+      }
+     },
+     {
+      "name": "since",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "until",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "moves",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "topGames",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "recentGames",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "history",
+      "in": "query",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ]
+   }
+  },
+  "/player": {
+   "get": {
+    "servers": [
+     "https://explorer.lichess.org",
+     "http://localhost:{port}"
+    ],
+    "parameters": [
+     {
+      "name": "player",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "color",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "white",
+        "black"
+       ]
+      }
+     },
+     {
+      "name": "variant",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "standard",
+        "chess960",
+        "crazyhouse",
+        "antichess",
+        "atomic",
+        "horde",
+        "kingOfTheHill",
+        "racingKings",
+        "threeCheck",
+        "fromPosition"
+       ]
+      }
+     },
+     {
+      "name": "fen",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "play",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "speeds",
+      "in": "query",
+      "schema": {
+       "type": "array"
+      }
+     },
+     {
+      "name": "modes",
+      "in": "query",
+      "schema": {
+       "type": "array"
+      }
+     },
+     {
+      "name": "since",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "until",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "moves",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "recentGames",
+      "in": "query",
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/masters/pgn/{gameId}": {
+   "get": {
+    "servers": [
+     "https://explorer.lichess.org",
+     "http://localhost:{port}"
+    ],
+    "parameters": [
+     {
+      "name": "gameId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/standard": {
+   "get": {
+    "servers": [
+     "https://tablebase.lichess.org",
+     "http://localhost:{port}"
+    ],
+    "parameters": [
+     {
+      "name": "fen",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "dtc",
+      "in": "query",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "never",
+        "auxiliary",
+        "always"
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "/atomic": {
+   "get": {
+    "servers": [
+     "https://tablebase.lichess.org",
+     "http://localhost:{port}"
+    ],
+    "parameters": [
+     {
+      "name": "fen",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/antichess": {
+   "get": {
+    "servers": [
+     "https://tablebase.lichess.org",
+     "http://localhost:{port}"
+    ],
+    "parameters": [
+     {
+      "name": "fen",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  }
+ }
+}
