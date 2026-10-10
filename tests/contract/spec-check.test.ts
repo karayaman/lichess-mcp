@@ -27,6 +27,8 @@ const spec: Spec = {
       },
     },
     "/broadcast/new": { post: {} },
+    "/api/broadcast/{tourSlug}/{roundSlug}/{roundId}": { get: {} },
+    "/broadcast/{id}/players/{playerId}": { get: {} },
     "/broadcast/{id}": { get: {} },
     "/standard": { servers: ["https://tablebase.lichess.org"], get: {} },
   },
@@ -48,9 +50,23 @@ describe("checkRequest", () => {
     ).toEqual([]);
   });
 
-  it("flags a path the spec doesn't have, e.g. an /api prefix on a root endpoint", () => {
+  it("flags a path the spec doesn't have", () => {
+    expect(checkRequest(get("https://lichess.org/api/nope"), spec)).toEqual([
+      "GET https://lichess.org/api/nope UNKNOWN_PATH",
+    ]);
+  });
+
+  it("flags an /api prefix on an endpoint that lives at the site root", () => {
     expect(checkRequest(form("https://lichess.org/api/team/t1/join", "message=hi"), spec)).toEqual([
-      "POST https://lichess.org/api/team/t1/join UNKNOWN_PATH",
+      "POST https://lichess.org/api/team/t1/join API_PREFIX spec path is /team/{teamId}/join",
+    ]);
+  });
+
+  it("flags an /api prefix even when a looser /api template also matches", () => {
+    // /api/broadcast/b1/players/p1 fits /api/broadcast/{tourSlug}/{roundSlug}/{roundId},
+    // but /broadcast/{id}/players/{playerId} is the more literal match.
+    expect(checkRequest(get("https://lichess.org/api/broadcast/b1/players/p1"), spec)).toEqual([
+      "GET https://lichess.org/api/broadcast/b1/players/p1 API_PREFIX spec path is /broadcast/{id}/players/{playerId}",
     ]);
   });
 
