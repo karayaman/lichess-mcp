@@ -196,3 +196,14 @@ describe("claim_bot_draw", () => {
     expectFetch(mock, { method: "POST", url: apiUrl("/bot/game/game1/claim-draw") });
   });
 });
+
+describe("stream_bot_game against a stream that never closes", () => {
+  it("returns the first event instead of waiting for the body to end", async () => {
+    const mock = installFetchMock();
+    mock.respondOpenStream(["\n", '{"type":"first"}\n{"type":"second"}\n']);
+
+    const result = await findTool("stream_bot_game").handler({ gameId: "game1" }, makeContext());
+
+    expect(result).toEqual({ type: "first" });
+  }, 2000);
+});

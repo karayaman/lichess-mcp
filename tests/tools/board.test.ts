@@ -277,3 +277,25 @@ describe("berserk_board_game", () => {
     expectFetch(mock, { method: "POST", url: apiUrl("/board/game/game1/berserk") });
   });
 });
+
+describe("stream_events against a stream that never closes", () => {
+  it("returns the first event instead of waiting for the body to end", async () => {
+    const mock = installFetchMock();
+    mock.respondOpenStream(["\n", '{"type":"first"}\n{"type":"second"}\n']);
+
+    const result = await findTool("stream_events").handler({}, makeContext());
+
+    expect(result).toEqual({ type: "first" });
+  }, 2000);
+});
+
+describe("stream_board_game against a stream that never closes", () => {
+  it("returns the first event instead of waiting for the body to end", async () => {
+    const mock = installFetchMock();
+    mock.respondOpenStream(["\n", '{"type":"first"}\n{"type":"second"}\n']);
+
+    const result = await findTool("stream_board_game").handler({ gameId: "game1" }, makeContext());
+
+    expect(result).toEqual({ type: "first" });
+  }, 2000);
+});
