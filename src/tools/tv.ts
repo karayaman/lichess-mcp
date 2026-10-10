@@ -48,10 +48,7 @@ const getTvFeed = tool({
   description: "Stream positions and moves of the current TV game (returns first chunk)",
   schema: z.object({}),
   handler: async (_args, { client }) => {
-    const response = await client.request("/tv/feed", { auth: false });
-    const text = await response.text();
-    const firstLine = text.split("\n").find((l) => l.trim()) ?? "";
-    return firstLine ? (JSON.parse(firstLine) as object) : {};
+    return (await client.firstStreamEvent<object>("/tv/feed", { auth: false })) ?? {};
   },
 });
 
@@ -62,12 +59,9 @@ const getTvChannelFeed = tool({
     channel: z.enum(TV_CHANNELS).describe("TV channel name"),
   }),
   handler: async ({ channel }, { client }) => {
-    const response = await client.request(`/tv/${encodeURIComponent(channel)}/feed`, {
+    return (await client.firstStreamEvent<object>(`/tv/${encodeURIComponent(channel)}/feed`, {
       auth: false,
-    });
-    const text = await response.text();
-    const firstLine = text.split("\n").find((l) => l.trim()) ?? "";
-    return firstLine ? (JSON.parse(firstLine) as object) : {};
+    })) ?? {};
   },
 });
 

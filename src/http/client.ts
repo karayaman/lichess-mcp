@@ -1,5 +1,5 @@
 import { LichessApiError } from "./errors.js";
-import { parseJson, parseNdjson, parsePgnOrJson } from "./parse.js";
+import { parseJson, parseNdjson, parsePgnOrJson, readFirstNdjsonLine } from "./parse.js";
 import { TokenStore } from "./token-store.js";
 
 const DEFAULT_BASE_URL = "https://lichess.org/api";
@@ -58,6 +58,11 @@ export class LichessClient {
 
   ndjson<T>(path: string, options?: RequestOptions): Promise<T[]> {
     return this.request(path, options).then((r) => parseNdjson<T>(r));
+  }
+
+  /** First event from an endless NDJSON stream; null if none arrives in time. */
+  firstStreamEvent<T = unknown>(path: string, options?: RequestOptions): Promise<T | null> {
+    return this.request(path, options).then((r) => readFirstNdjsonLine<T>(r));
   }
 
   pgn(path: string, options?: RequestOptions): Promise<string> {
