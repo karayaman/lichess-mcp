@@ -3,6 +3,8 @@ import { parseJson, parseNdjson, parsePgnOrJson, readFirstNdjsonLine } from "./p
 import { TokenStore } from "./token-store.js";
 
 const DEFAULT_BASE_URL = "https://lichess.org/api";
+/** For endpoints served from the site root rather than /api (e.g. /team/{id}/join). */
+export const SITE_BASE_URL = "https://lichess.org";
 const RETRY_STATUSES = new Set([429, 503]);
 const MAX_RETRIES = 2;
 
