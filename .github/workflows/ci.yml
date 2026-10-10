@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Typecheck, build, test (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      # --ignore-scripts skips "prepare", which would run the build before we ask for it.
+      - run: npm ci --ignore-scripts
+      # build = typecheck + Vite UI bundles + server
+      - run: npm run build
+      - run: npm test
+
+  docker:
+    name: Docker image smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # The smoke test (scripts/docker-smoke.mjs, `npm run test:docker`) arrives
+      # with the Dockerfile fix; until then this job only reports that it skipped.
+      - name: Skip if there is no smoke test yet
+        if: hashFiles('scripts/docker-smoke.mjs') == ''
+        run: echo "::notice::scripts/docker-smoke.mjs not found; skipping the Docker smoke test"
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        if: hashFiles('scripts/docker-smoke.mjs') != ''
+        with:
+          node-version: 22
+          cache: npm
+      - if: hashFiles('scripts/docker-smoke.mjs') != ''
+        run: npm ci --ignore-scripts
+      - if: hashFiles('scripts/docker-smoke.mjs') != ''
+        run: npm run test:docker
