@@ -1,4 +1,5 @@
 import { z, ZodObject, ZodRawShape } from "zod";
+import type { ToolAnnotations } from "@modelcontextprotocol/sdk/types.js";
 import { LichessClient } from "./http/client.js";
 import { TokenStore } from "./http/token-store.js";
 import { UiToolResult } from "./types/ui-props.js";
@@ -46,9 +47,26 @@ export interface UiAppDescriptor {
   visibility?: McpUiToolVisibility[];
 }
 
+/**
+ * MCP tool annotation presets. Clients may use these hints to decide when to ask
+ * the user before running a tool (e.g. auto-approve read-only tools only).
+ *
+ * - READ_ONLY: changes nothing.
+ * - ADDITIVE: creates, joins, sends or moves, but removes nothing.
+ * - DESTRUCTIVE: deletes or overwrites existing data, ends or forfeits a game or
+ *   event, removes a person or relationship, or cannot be undone.
+ *
+ * openWorldHint defaults to true, which fits every tool that calls Lichess.
+ */
+export const READ_ONLY = { readOnlyHint: true } as const satisfies ToolAnnotations;
+export const ADDITIVE = { readOnlyHint: false, destructiveHint: false } as const satisfies ToolAnnotations;
+export const DESTRUCTIVE = { readOnlyHint: false, destructiveHint: true } as const satisfies ToolAnnotations;
+
 export interface ToolDefinition<S extends ZodRawShape = ZodRawShape> {
   name: string;
   description: string;
+  /** Safety hints for MCP clients; use READ_ONLY, ADDITIVE or DESTRUCTIVE. */
+  annotations: ToolAnnotations;
   /** Object-shape schema. The shape is what gets passed to MCP for validation. */
   schema: ZodObject<S>;
   handler: (args: z.infer<ZodObject<S>>, ctx: ToolContext) => Promise<ToolResult>;

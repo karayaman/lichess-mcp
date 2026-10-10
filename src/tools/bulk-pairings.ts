@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, ADDITIVE, DESTRUCTIVE, READ_ONLY } from "../registry.js";
 
 const pairingIdSchema = z.object({
   id: z.string().trim().min(1).describe("The bulk pairing ID"),
@@ -7,6 +7,7 @@ const pairingIdSchema = z.object({
 
 const listBulkPairings = tool({
   name: "list_bulk_pairings",
+  annotations: READ_ONLY,
   description: "Get all upcoming bulk pairings for the current user",
   schema: z.object({}),
   handler: async (_args, { client }) => client.json("/bulk-pairing"),
@@ -14,6 +15,7 @@ const listBulkPairings = tool({
 
 const createBulkPairing = tool({
   name: "create_bulk_pairing",
+  annotations: ADDITIVE,
   description: "Create a bulk pairing for multiple players",
   schema: z.object({
     players: z
@@ -54,6 +56,7 @@ const createBulkPairing = tool({
 
 const startBulkPairingClocks = tool({
   name: "start_bulk_pairing_clocks",
+  annotations: ADDITIVE,
   description: "Start the clocks of the games in a bulk pairing immediately",
   schema: pairingIdSchema,
   handler: async ({ id }, { client }) => {
@@ -64,6 +67,7 @@ const startBulkPairingClocks = tool({
 
 const getBulkPairing = tool({
   name: "get_bulk_pairing",
+  annotations: READ_ONLY,
   description: "Get a bulk pairing by ID",
   schema: pairingIdSchema,
   handler: async ({ id }, { client }) =>
@@ -72,6 +76,7 @@ const getBulkPairing = tool({
 
 const deleteBulkPairing = tool({
   name: "delete_bulk_pairing",
+  annotations: DESTRUCTIVE,
   description: "Delete an upcoming bulk pairing",
   schema: pairingIdSchema,
   handler: async ({ id }, { client }) => {
@@ -82,6 +87,7 @@ const deleteBulkPairing = tool({
 
 const getBulkPairingGames = tool({
   name: "get_bulk_pairing_games",
+  annotations: READ_ONLY,
   description: "Get the games of a bulk pairing",
   schema: pairingIdSchema,
   handler: async ({ id }, { client }) =>

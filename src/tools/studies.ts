@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, ADDITIVE, DESTRUCTIVE, READ_ONLY } from "../registry.js";
 
 const studyFlags = {
   clocks: z.boolean().optional(),
@@ -11,6 +11,7 @@ const studyFlags = {
 
 const exportStudyChapter = tool({
   name: "export_study_chapter",
+  annotations: READ_ONLY,
   description: "Export one study chapter as PGN",
   schema: z.object({
     studyId: z.string().trim().min(1).describe("The study ID"),
@@ -31,6 +32,7 @@ const exportStudyChapter = tool({
 
 const exportAllStudyChapters = tool({
   name: "export_all_study_chapters",
+  annotations: READ_ONLY,
   description: "Export all chapters of a study as PGN",
   schema: z.object({
     studyId: z.string().trim().min(1).describe("The study ID"),
@@ -48,6 +50,7 @@ const exportAllStudyChapters = tool({
 
 const getUserStudies = tool({
   name: "get_user_studies",
+  annotations: READ_ONLY,
   description: "Get studies created by a user",
   schema: z.object({
     username: z.string().trim().min(1).describe("Username of the study creator"),
@@ -63,6 +66,7 @@ const studyPermission = z
 
 const createStudy = tool({
   name: "create_study",
+  annotations: ADDITIVE,
   description: "Create a new study",
   schema: z.object({
     name: z.string().trim().min(2).max(100).describe("The study name"),
@@ -89,6 +93,7 @@ const createStudy = tool({
 
 const importStudyPgn = tool({
   name: "import_study_pgn",
+  annotations: ADDITIVE,
   description: "Import a PGN into a study as new chapters",
   schema: z.object({
     studyId: z.string().trim().min(1).describe("The study ID"),
@@ -105,6 +110,7 @@ const importStudyPgn = tool({
 
 const updateStudyChapterTags = tool({
   name: "update_study_chapter_tags",
+  annotations: DESTRUCTIVE,
   description: "Update tags for a study chapter",
   schema: z.object({
     studyId: z.string().trim().min(1).describe("The study ID"),
@@ -122,6 +128,7 @@ const updateStudyChapterTags = tool({
 
 const addStudyChapterMoves = tool({
   name: "add_study_chapter_moves",
+  annotations: ADDITIVE,
   description: "Add moves to a study chapter",
   schema: z.object({
     studyId: z.string().trim().min(1).describe("The study ID"),
@@ -139,6 +146,7 @@ const addStudyChapterMoves = tool({
 
 const exportUserStudiesPgn = tool({
   name: "export_user_studies_pgn",
+  annotations: READ_ONLY,
   description: "Export all chapters of all studies by a user as PGN",
   schema: z.object({
     username: z.string().trim().min(1).describe("Username of the study creator"),
@@ -149,6 +157,7 @@ const exportUserStudiesPgn = tool({
 
 const deleteStudyChapter = tool({
   name: "delete_study_chapter",
+  annotations: DESTRUCTIVE,
   description: "Delete a chapter from a study",
   schema: z.object({
     studyId: z.string().trim().min(1).describe("The study ID"),

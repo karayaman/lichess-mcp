@@ -1,8 +1,9 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, ADDITIVE, READ_ONLY } from "../registry.js";
 
 const sendMessage = tool({
   name: "send_message",
+  annotations: ADDITIVE,
   description: "Send a private message to a Lichess user",
   schema: z.object({
     username: z.string().trim().min(1).describe("Username of the recipient"),
@@ -16,6 +17,7 @@ const sendMessage = tool({
 
 const getThread = tool({
   name: "get_thread",
+  annotations: READ_ONLY,
   description: "Get the message thread with a specific user",
   schema: z.object({
     userId: z.string().trim().min(1).describe("ID of the user whose thread to fetch"),

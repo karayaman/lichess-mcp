@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, ADDITIVE, DESTRUCTIVE, READ_ONLY } from "../registry.js";
 
 const VARIANTS = [
   "standard",
@@ -29,6 +29,7 @@ const DECLINE_REASONS = [
 
 const createChallenge = tool({
   name: "create_challenge",
+  annotations: ADDITIVE,
   description: "Challenge another player to a game",
   schema: z.object({
     username: z.string().trim().min(1).describe("Username of the player to challenge"),
@@ -62,6 +63,7 @@ const createChallenge = tool({
 
 const listChallenges = tool({
   name: "list_challenges",
+  annotations: READ_ONLY,
   description: "List incoming and outgoing challenges",
   schema: z.object({}),
   handler: async (_args, { client }) => client.json("/challenge"),
@@ -69,6 +71,7 @@ const listChallenges = tool({
 
 const acceptChallenge = tool({
   name: "accept_challenge",
+  annotations: ADDITIVE,
   description: "Accept an incoming challenge",
   schema: z.object({
     challengeId: z.string().trim().min(1).describe("ID of the challenge to accept"),
@@ -81,6 +84,7 @@ const acceptChallenge = tool({
 
 const declineChallenge = tool({
   name: "decline_challenge",
+  annotations: DESTRUCTIVE,
   description: "Decline an incoming challenge",
   schema: z.object({
     challengeId: z.string().trim().min(1).describe("ID of the challenge to decline"),
@@ -94,6 +98,7 @@ const declineChallenge = tool({
 
 const cancelChallenge = tool({
   name: "cancel_challenge",
+  annotations: DESTRUCTIVE,
   description: "Cancel an outgoing challenge",
   schema: z.object({
     challengeId: z.string().trim().min(1).describe("ID of the challenge to cancel"),
@@ -106,6 +111,7 @@ const cancelChallenge = tool({
 
 const getChallenge = tool({
   name: "get_challenge",
+  annotations: READ_ONLY,
   description: "Get details about a specific challenge",
   schema: z.object({
     challengeId: z.string().trim().min(1).describe("ID of the challenge"),
@@ -116,6 +122,7 @@ const getChallenge = tool({
 
 const challengeAi = tool({
   name: "challenge_ai",
+  annotations: ADDITIVE,
   description: "Start a game with the Lichess AI (Stockfish)",
   schema: z.object({
     level: z.number().int().min(1).max(8).describe("AI strength (1-8)"),
@@ -143,6 +150,7 @@ const challengeAi = tool({
 
 const createOpenChallenge = tool({
   name: "create_open_challenge",
+  annotations: ADDITIVE,
   description: "Create an open challenge that anyone can accept",
   schema: z.object({
     rated: z.boolean().optional().default(false),
@@ -169,6 +177,7 @@ const createOpenChallenge = tool({
 
 const startChallengeClocks = tool({
   name: "start_challenge_clocks",
+  annotations: ADDITIVE,
   description: "Start the clocks of a game immediately (both players must have provided tokens)",
   schema: z.object({
     gameId: z.string().trim().min(1).describe("The game ID"),
@@ -184,6 +193,7 @@ const startChallengeClocks = tool({
 
 const addTimeToGame = tool({
   name: "add_time_to_game",
+  annotations: ADDITIVE,
   description: "Add seconds to the clock of the opponent",
   schema: z.object({
     gameId: z.string().trim().min(1).describe("The game ID"),
@@ -199,6 +209,7 @@ const addTimeToGame = tool({
 
 const adminChallengeTokens = tool({
   name: "admin_challenge_tokens",
+  annotations: ADDITIVE,
   description: "Create tokens for admin-generated challenges (requires admin:challenge scope)",
   schema: z.object({
     users: z.string().trim().min(1).describe("Comma-separated list of usernames"),

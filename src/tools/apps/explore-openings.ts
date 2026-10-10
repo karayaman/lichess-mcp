@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Chess } from "chess.js";
-import { tool } from "../../registry.js";
+import { tool, READ_ONLY } from "../../registry.js";
 import {
   fetchLichessExplorer,
   fetchMastersExplorer,
@@ -51,6 +51,7 @@ function summarizeText(data: ExplorerData, source: ExplorerSource): string {
 
 export const exploreOpenings = tool({
   name: "explore_openings",
+  annotations: READ_ONLY,
   description:
     "Open an interactive opening explorer in Claude Desktop. Click moves on the board or in the move list to drill down; switch between Masters (OTB) and Lichess game databases. Defaults to the starting position.",
   schema: z.object({

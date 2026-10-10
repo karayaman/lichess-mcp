@@ -37,6 +37,7 @@ export function buildServer(ctx: ToolContext): McpServer {
         {
           description: t.description,
           inputSchema: t.schema.shape,
+          annotations: t.annotations,
           _meta: { ui: uiMeta },
         },
         async (args: unknown) => runTool(t, args, ctx),
@@ -66,7 +67,7 @@ export function buildServer(ctx: ToolContext): McpServer {
     } else {
       mcp.registerTool(
         t.name,
-        { description: t.description, inputSchema: t.schema.shape },
+        { description: t.description, inputSchema: t.schema.shape, annotations: t.annotations },
         async (args: unknown) => runTool(t, args, ctx),
       );
     }

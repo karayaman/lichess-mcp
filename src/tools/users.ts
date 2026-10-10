@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, READ_ONLY } from "../registry.js";
 
 const PERF_TYPES = [
   "ultraBullet",
@@ -19,6 +19,7 @@ const PERF_TYPES = [
 
 const getUsersStatus = tool({
   name: "get_users_status",
+  annotations: READ_ONLY,
   description: "Get real-time status of multiple users",
   schema: z.object({
     ids: z
@@ -41,6 +42,7 @@ const getUsersStatus = tool({
 
 const getAllTop10 = tool({
   name: "get_all_top_10",
+  annotations: READ_ONLY,
   description: "Get the top 10 players for each speed and variant",
   schema: z.object({}),
   handler: async (_args, { client }) => client.json("/player"),
@@ -48,6 +50,7 @@ const getAllTop10 = tool({
 
 const getLeaderboard = tool({
   name: "get_leaderboard",
+  annotations: READ_ONLY,
   description: "Get the leaderboard for a specific perf type",
   schema: z.object({
     perfType: z.enum(PERF_TYPES).describe("Performance type"),
@@ -65,6 +68,7 @@ const getLeaderboard = tool({
 
 const getUserPublicData = tool({
   name: "get_user_public_data",
+  annotations: READ_ONLY,
   description: "Get public data of a user",
   schema: z.object({
     username: z.string().trim().min(1).describe("Username of the player"),
@@ -78,6 +82,7 @@ const getUserPublicData = tool({
 
 const getRatingHistory = tool({
   name: "get_rating_history",
+  annotations: READ_ONLY,
   description: "Get the rating history of a user",
   schema: z.object({
     username: z.string().trim().min(1).describe("Username of the player"),
@@ -88,6 +93,7 @@ const getRatingHistory = tool({
 
 const getUserPerformance = tool({
   name: "get_user_performance",
+  annotations: READ_ONLY,
   description: "Get user's performance statistics for a specific variant",
   schema: z.object({
     username: z.string().trim().min(1).describe("Username of the player"),
@@ -99,6 +105,7 @@ const getUserPerformance = tool({
 
 const getUserActivity = tool({
   name: "get_user_activity",
+  annotations: READ_ONLY,
   description: "Get the activity feed of a user",
   schema: z.object({
     username: z.string().trim().min(1).describe("Username of the player"),
@@ -109,6 +116,7 @@ const getUserActivity = tool({
 
 const getUsersById = tool({
   name: "get_users_by_id",
+  annotations: READ_ONLY,
   description: "Get user data for a list of user IDs (POST body)",
   schema: z.object({
     ids: z
@@ -126,6 +134,7 @@ const getUsersById = tool({
 
 const getLiveStreamers = tool({
   name: "get_live_streamers",
+  annotations: READ_ONLY,
   description: "Get users who are streaming on Twitch or YouTube currently",
   schema: z.object({}),
   handler: async (_args, { client }) => client.json("/streamer/live", { auth: false }),
@@ -133,6 +142,7 @@ const getLiveStreamers = tool({
 
 const getCrosstable = tool({
   name: "get_crosstable",
+  annotations: READ_ONLY,
   description: "Get head-to-head statistics between two users",
   schema: z.object({
     user1: z.string().trim().min(1).describe("First player username"),
@@ -149,6 +159,7 @@ const getCrosstable = tool({
 
 const autocompletePlayer = tool({
   name: "autocomplete_player",
+  annotations: READ_ONLY,
   description: "Autocomplete player username search",
   schema: z.object({
     term: z.string().trim().min(1).describe("Partial username to search"),
@@ -171,6 +182,7 @@ const autocompletePlayer = tool({
 
 const readUserNote = tool({
   name: "read_user_note",
+  annotations: READ_ONLY,
   description: "Read private notes about a user",
   schema: z.object({
     username: z.string().trim().min(1).describe("Username to read notes about"),

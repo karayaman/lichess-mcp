@@ -1,8 +1,9 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, ADDITIVE, DESTRUCTIVE, READ_ONLY } from "../registry.js";
 
 const setToken = tool({
   name: "set_token",
+  annotations: { ...DESTRUCTIVE, openWorldHint: false },
   description: "Set your Lichess API token",
   schema: z.object({
     token: z.string().min(1).describe("Your Lichess API token"),
@@ -15,6 +16,7 @@ const setToken = tool({
 
 const getMyProfile = tool({
   name: "get_my_profile",
+  annotations: READ_ONLY,
   description: "Get your Lichess profile information",
   schema: z.object({}),
   handler: async (_args, { client }) => client.json("/account"),
@@ -22,6 +24,7 @@ const getMyProfile = tool({
 
 const getUserProfile = tool({
   name: "get_user_profile",
+  annotations: READ_ONLY,
   description: "Get a user's Lichess profile information",
   schema: z.object({
     username: z.string().min(1).describe("Username of the player"),
@@ -33,6 +36,7 @@ const getUserProfile = tool({
 
 const getMyEmail = tool({
   name: "get_my_email",
+  annotations: READ_ONLY,
   description: "Get your email address",
   schema: z.object({}),
   handler: async (_args, { client }) => {
@@ -43,6 +47,7 @@ const getMyEmail = tool({
 
 const getKidMode = tool({
   name: "get_kid_mode",
+  annotations: READ_ONLY,
   description: "Get kid mode status",
   schema: z.object({}),
   handler: async (_args, { client }) => {
@@ -53,6 +58,7 @@ const getKidMode = tool({
 
 const setKidMode = tool({
   name: "set_kid_mode",
+  annotations: DESTRUCTIVE,
   description: "Set kid mode status",
   schema: z.object({
     value: z.boolean().describe("Enable or disable kid mode"),
@@ -65,6 +71,7 @@ const setKidMode = tool({
 
 const getPreferences = tool({
   name: "get_preferences",
+  annotations: READ_ONLY,
   description: "Get your preferences",
   schema: z.object({}),
   handler: async (_args, { client }) => client.json("/account/preferences"),
@@ -72,6 +79,7 @@ const getPreferences = tool({
 
 const getTimeline = tool({
   name: "get_timeline",
+  annotations: READ_ONLY,
   description: "Get your timeline",
   schema: z.object({
     since: z.number().int().optional().describe("Show events since this timestamp"),
@@ -93,6 +101,7 @@ const getTimeline = tool({
 
 const testTokens = tool({
   name: "test_tokens",
+  annotations: READ_ONLY,
   description: "Test multiple OAuth tokens",
   schema: z.object({
     tokens: z
@@ -111,6 +120,7 @@ const testTokens = tool({
 
 const revokeToken = tool({
   name: "revoke_token",
+  annotations: DESTRUCTIVE,
   description: "Revoke the current access token",
   schema: z.object({}),
   handler: async (_args, { client, tokens }) => {
@@ -125,6 +135,7 @@ const revokeToken = tool({
 
 const upgradeToBot = tool({
   name: "upgrade_to_bot",
+  annotations: DESTRUCTIVE,
   description: "Upgrade your account to a Bot account",
   schema: z.object({}),
   handler: async (_args, { client }) => {
@@ -135,6 +146,7 @@ const upgradeToBot = tool({
 
 const addUserNote = tool({
   name: "add_user_note",
+  annotations: ADDITIVE,
   description: "Add a private note about a user",
   schema: z.object({
     username: z.string().min(1).describe("Username to add a note about"),

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, ADDITIVE, DESTRUCTIVE, READ_ONLY } from "../registry.js";
 
 const VARIANTS = [
   "standard",
@@ -19,6 +19,7 @@ const swissIdSchema = z.object({
 
 const createSwiss = tool({
   name: "create_swiss",
+  annotations: ADDITIVE,
   description: "Create a new Swiss tournament for a team",
   schema: z.object({
     name: z.string().trim().min(1).describe("Tournament name"),
@@ -54,6 +55,7 @@ const createSwiss = tool({
 
 const getSwissInfo = tool({
   name: "get_swiss_info",
+  annotations: READ_ONLY,
   description: "Get info about a Swiss tournament",
   schema: swissIdSchema,
   handler: async ({ swissId }, { client }) =>
@@ -62,6 +64,7 @@ const getSwissInfo = tool({
 
 const getSwissGames = tool({
   name: "get_swiss_games",
+  annotations: READ_ONLY,
   description: "Export games of a Swiss tournament",
   schema: z.object({
     swissId: z.string().trim().min(1),
@@ -86,6 +89,7 @@ const getSwissGames = tool({
 
 const getSwissResults = tool({
   name: "get_swiss_results",
+  annotations: READ_ONLY,
   description: "Get results of a Swiss tournament",
   schema: z.object({
     swissId: z.string().trim().min(1),
@@ -99,6 +103,7 @@ const getSwissResults = tool({
 
 const joinSwiss = tool({
   name: "join_swiss",
+  annotations: ADDITIVE,
   description: "Join a Swiss tournament",
   schema: swissIdSchema,
   handler: async ({ swissId }, { client }) => {
@@ -109,6 +114,7 @@ const joinSwiss = tool({
 
 const withdrawFromSwiss = tool({
   name: "withdraw_from_swiss",
+  annotations: DESTRUCTIVE,
   description: "Withdraw from a Swiss tournament",
   schema: swissIdSchema,
   handler: async ({ swissId }, { client }) => {
@@ -119,6 +125,7 @@ const withdrawFromSwiss = tool({
 
 const updateSwiss = tool({
   name: "update_swiss",
+  annotations: DESTRUCTIVE,
   description: "Update a Swiss tournament",
   schema: z.object({
     swissId: z.string().trim().min(1).describe("The Swiss tournament ID"),
@@ -138,6 +145,7 @@ const updateSwiss = tool({
 
 const scheduleNextSwissRound = tool({
   name: "schedule_next_swiss_round",
+  annotations: DESTRUCTIVE,
   description: "Manually schedule the next round of a Swiss tournament",
   schema: z.object({
     swissId: z.string().trim().min(1).describe("The Swiss tournament ID"),
@@ -153,6 +161,7 @@ const scheduleNextSwissRound = tool({
 
 const terminateSwiss = tool({
   name: "terminate_swiss",
+  annotations: DESTRUCTIVE,
   description: "Terminate a Swiss tournament",
   schema: swissIdSchema,
   handler: async ({ swissId }, { client }) => {
@@ -163,6 +172,7 @@ const terminateSwiss = tool({
 
 const getSwissTrf = tool({
   name: "get_swiss_trf",
+  annotations: READ_ONLY,
   description: "Download the TRF file for a Swiss tournament (FIDE format)",
   schema: swissIdSchema,
   handler: async ({ swissId }, { client }) => {

@@ -1,10 +1,11 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, ADDITIVE, DESTRUCTIVE, READ_ONLY } from "../registry.js";
 
 const gameIdSchema = z.string().trim().min(1).describe("The game ID");
 
 const getOnlineBots = tool({
   name: "get_online_bots",
+  annotations: READ_ONLY,
   description: "Stream online bot users",
   schema: z.object({
     nb: z
@@ -21,6 +22,7 @@ const getOnlineBots = tool({
 
 const streamBotGame = tool({
   name: "stream_bot_game",
+  annotations: READ_ONLY,
   description: "Stream the state of a bot game (returns first event)",
   schema: z.object({ gameId: gameIdSchema }),
   handler: async ({ gameId }, { client }) => {
@@ -33,6 +35,7 @@ const streamBotGame = tool({
 
 const makeBotMove = tool({
   name: "make_bot_move",
+  annotations: ADDITIVE,
   description: "Make a move in a bot game",
   schema: z.object({
     gameId: gameIdSchema,
@@ -50,6 +53,7 @@ const makeBotMove = tool({
 
 const writeBotChat = tool({
   name: "write_bot_chat",
+  annotations: ADDITIVE,
   description: "Write in the chat of a bot game",
   schema: z.object({
     gameId: gameIdSchema,
@@ -64,6 +68,7 @@ const writeBotChat = tool({
 
 const getBotGameChat = tool({
   name: "get_bot_game_chat",
+  annotations: READ_ONLY,
   description: "Get the chat messages of a bot game",
   schema: z.object({ gameId: gameIdSchema }),
   handler: async ({ gameId }, { client }) =>
@@ -72,6 +77,7 @@ const getBotGameChat = tool({
 
 const abortBotGame = tool({
   name: "abort_bot_game",
+  annotations: DESTRUCTIVE,
   description: "Abort a bot game",
   schema: z.object({ gameId: gameIdSchema }),
   handler: async ({ gameId }, { client }) => {
@@ -82,6 +88,7 @@ const abortBotGame = tool({
 
 const resignBotGame = tool({
   name: "resign_bot_game",
+  annotations: DESTRUCTIVE,
   description: "Resign a bot game",
   schema: z.object({ gameId: gameIdSchema }),
   handler: async ({ gameId }, { client }) => {
@@ -92,6 +99,7 @@ const resignBotGame = tool({
 
 const handleBotDraw = tool({
   name: "handle_bot_draw",
+  annotations: DESTRUCTIVE,
   description: "Accept or decline a draw offer in a bot game",
   schema: z.object({
     gameId: gameIdSchema,
@@ -107,6 +115,7 @@ const handleBotDraw = tool({
 
 const handleBotTakeback = tool({
   name: "handle_bot_takeback",
+  annotations: DESTRUCTIVE,
   description: "Accept or decline a takeback offer in a bot game",
   schema: z.object({
     gameId: gameIdSchema,
@@ -122,6 +131,7 @@ const handleBotTakeback = tool({
 
 const claimBotVictory = tool({
   name: "claim_bot_victory",
+  annotations: DESTRUCTIVE,
   description: "Claim victory if opponent abandoned the bot game",
   schema: z.object({ gameId: gameIdSchema }),
   handler: async ({ gameId }, { client }) => {
@@ -132,6 +142,7 @@ const claimBotVictory = tool({
 
 const claimBotDraw = tool({
   name: "claim_bot_draw",
+  annotations: DESTRUCTIVE,
   description: "Claim a draw in a bot game",
   schema: z.object({ gameId: gameIdSchema }),
   handler: async ({ gameId }, { client }) => {

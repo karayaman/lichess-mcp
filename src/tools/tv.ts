@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, READ_ONLY } from "../registry.js";
 
 const TV_CHANNELS = [
   "bot",
@@ -22,6 +22,7 @@ const TV_CHANNELS = [
 
 const getTvChannels = tool({
   name: "get_tv_channels",
+  annotations: READ_ONLY,
   description: "Get all TV channels and their current games",
   schema: z.object({}),
   handler: async (_args, { client }) => client.json("/tv/channels"),
@@ -29,6 +30,7 @@ const getTvChannels = tool({
 
 const getTvGame = tool({
   name: "get_tv_game",
+  annotations: READ_ONLY,
   description: "Get current TV game in PGN format",
   schema: z.object({
     channel: z
@@ -45,6 +47,7 @@ const getTvGame = tool({
 
 const getTvFeed = tool({
   name: "get_tv_feed",
+  annotations: READ_ONLY,
   description: "Stream positions and moves of the current TV game (returns first chunk)",
   schema: z.object({}),
   handler: async (_args, { client }) => {
@@ -57,6 +60,7 @@ const getTvFeed = tool({
 
 const getTvChannelFeed = tool({
   name: "get_tv_channel_feed",
+  annotations: READ_ONLY,
   description: "Stream positions and moves of the current game of a TV channel (returns first chunk)",
   schema: z.object({
     channel: z.enum(TV_CHANNELS).describe("TV channel name"),

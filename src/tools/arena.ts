@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, ADDITIVE, DESTRUCTIVE, READ_ONLY } from "../registry.js";
 
 const VARIANTS = [
   "standard",
@@ -19,6 +19,7 @@ const tournamentIdSchema = z.object({
 
 const getArenaTournaments = tool({
   name: "get_arena_tournaments",
+  annotations: READ_ONLY,
   description: "Get current arena tournaments",
   schema: z.object({}),
   handler: async (_args, { client }) => client.json("/tournament"),
@@ -26,6 +27,7 @@ const getArenaTournaments = tool({
 
 const createArena = tool({
   name: "create_arena",
+  annotations: ADDITIVE,
   description: "Create a new arena tournament",
   schema: z.object({
     name: z.string().trim().min(1).describe("Name of the tournament"),
@@ -58,6 +60,7 @@ const createArena = tool({
 
 const getArenaInfo = tool({
   name: "get_arena_info",
+  annotations: READ_ONLY,
   description: "Get info about an arena tournament",
   schema: tournamentIdSchema,
   handler: async ({ tournamentId }, { client }) =>
@@ -66,6 +69,7 @@ const getArenaInfo = tool({
 
 const getArenaGames = tool({
   name: "get_arena_games",
+  annotations: READ_ONLY,
   description: "Export games of an arena tournament",
   schema: tournamentIdSchema,
   handler: async ({ tournamentId }, { client }) =>
@@ -74,6 +78,7 @@ const getArenaGames = tool({
 
 const getArenaResults = tool({
   name: "get_arena_results",
+  annotations: READ_ONLY,
   description: "Get results of an arena tournament",
   schema: z.object({
     tournamentId: z.string().trim().min(1),
@@ -91,6 +96,7 @@ const getArenaResults = tool({
 
 const joinArena = tool({
   name: "join_arena",
+  annotations: ADDITIVE,
   description: "Join an arena tournament",
   schema: tournamentIdSchema,
   handler: async ({ tournamentId }, { client }) => {
@@ -101,6 +107,7 @@ const joinArena = tool({
 
 const withdrawFromArena = tool({
   name: "withdraw_from_arena",
+  annotations: DESTRUCTIVE,
   description: "Withdraw from an arena tournament",
   schema: tournamentIdSchema,
   handler: async ({ tournamentId }, { client }) => {
@@ -111,6 +118,7 @@ const withdrawFromArena = tool({
 
 const getTeamBattleResults = tool({
   name: "get_team_battle_results",
+  annotations: READ_ONLY,
   description: "Get team standings of a team battle tournament",
   schema: tournamentIdSchema,
   handler: async ({ tournamentId }, { client }) =>
@@ -119,6 +127,7 @@ const getTeamBattleResults = tool({
 
 const updateArena = tool({
   name: "update_arena",
+  annotations: DESTRUCTIVE,
   description: "Update an existing arena tournament",
   schema: z.object({
     tournamentId: z.string().trim().min(1).describe("The tournament ID"),
@@ -141,6 +150,7 @@ const updateArena = tool({
 
 const terminateArena = tool({
   name: "terminate_arena",
+  annotations: DESTRUCTIVE,
   description: "Terminate an arena tournament",
   schema: z.object({
     tournamentId: z.string().trim().min(1).describe("The tournament ID"),
@@ -153,6 +163,7 @@ const terminateArena = tool({
 
 const updateTeamBattle = tool({
   name: "update_team_battle",
+  annotations: DESTRUCTIVE,
   description: "Set the teams and number of leaders for a team battle tournament",
   schema: z.object({
     tournamentId: z.string().trim().min(1).describe("The team battle tournament ID"),
@@ -170,6 +181,7 @@ const updateTeamBattle = tool({
 
 const getUserTournamentsCreated = tool({
   name: "get_user_tournaments_created",
+  annotations: READ_ONLY,
   description: "Get tournaments created by a user",
   schema: z.object({
     username: z.string().trim().min(1).describe("Username of the tournament creator"),
@@ -187,6 +199,7 @@ const getUserTournamentsCreated = tool({
 
 const getUserTournamentsPlayed = tool({
   name: "get_user_tournaments_played",
+  annotations: READ_ONLY,
   description: "Get tournaments played by a user",
   schema: z.object({
     username: z.string().trim().min(1).describe("Username of the player"),

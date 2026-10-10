@@ -1,8 +1,9 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, READ_ONLY } from "../registry.js";
 
 const getCloudEval = tool({
   name: "get_cloud_eval",
+  annotations: READ_ONLY,
   description: "Get cloud evaluation for a position",
   schema: z.object({
     fen: z.string().trim().min(1).describe("FEN of the position to analyze"),
@@ -22,6 +23,7 @@ const getCloudEval = tool({
 
 const getFidePlayer = tool({
   name: "get_fide_player",
+  annotations: READ_ONLY,
   description: "Get FIDE player information",
   schema: z.object({
     playerId: z.string().trim().min(1).describe("FIDE player ID"),
@@ -32,6 +34,7 @@ const getFidePlayer = tool({
 
 const searchFidePlayers = tool({
   name: "search_fide_players",
+  annotations: READ_ONLY,
   description: "Search FIDE players by name",
   schema: z.object({
     name: z.string().trim().min(1).describe("Name of the player to search"),
@@ -42,6 +45,7 @@ const searchFidePlayers = tool({
 
 const getFidePlayerRatings = tool({
   name: "get_fide_player_ratings",
+  annotations: READ_ONLY,
   description: "Get rating history for a FIDE player",
   schema: z.object({
     playerId: z.string().trim().min(1).describe("FIDE player ID"),

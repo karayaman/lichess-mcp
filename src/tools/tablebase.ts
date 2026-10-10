@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, READ_ONLY } from "../registry.js";
 
 const TABLEBASE_BASE = "https://tablebase.lichess.org";
 
@@ -9,6 +9,7 @@ const fenSchema = z.object({
 
 const lookupStandardTablebase = tool({
   name: "lookup_standard_tablebase",
+  annotations: READ_ONLY,
   description: "Look up a position in the Syzygy tablebase (standard chess)",
   schema: z.object({
     fen: z.string().trim().min(1).describe("FEN of the position"),
@@ -26,6 +27,7 @@ const lookupStandardTablebase = tool({
 
 const lookupAtomicTablebase = tool({
   name: "lookup_atomic_tablebase",
+  annotations: READ_ONLY,
   description: "Look up a position in the Syzygy tablebase (atomic chess variant)",
   schema: fenSchema,
   handler: async ({ fen }, { client }) => {
@@ -39,6 +41,7 @@ const lookupAtomicTablebase = tool({
 
 const lookupAntichessTablebase = tool({
   name: "lookup_antichess_tablebase",
+  annotations: READ_ONLY,
   description: "Look up a position in the Syzygy tablebase (antichess variant)",
   schema: fenSchema,
   handler: async ({ fen }, { client }) => {
