@@ -2,22 +2,28 @@
 # Use official Node.js LTS Alpine base image
 FROM node:lts-alpine AS builder
 
-# Create app directory
 WORKDIR /usr/src/app
 
-# Install dependencies and build
-COPY package.json package-lock.json tsconfig.json ./
+# Install dependencies first so this layer is cached across source changes.
+# --ignore-scripts skips the "prepare" build, which needs the sources below.
+COPY package.json package-lock.json ./
+RUN npm ci --ignore-scripts
+
+# Build the server and the Vite-bundled MCP App UIs.
+COPY tsconfig.json tsconfig.ui.json vite.config.ts ./
 COPY src ./src
-RUN npm install --ignore-scripts && npm run build
+RUN npm run build
 
 # Runtime image
 FROM node:lts-alpine
+ENV NODE_ENV=production
 WORKDIR /usr/src/app
 
-# Copy built files and install production deps
-COPY --from=builder /usr/src/app/build ./build
 COPY package.json package-lock.json ./
-RUN npm install --production --ignore-scripts && npm cache clean --force
+RUN npm ci --omit=dev --ignore-scripts && npm cache clean --force
+COPY --from=builder /usr/src/app/build ./build
+
+USER node
 
 # Use stdio transport for MCP
 ENTRYPOINT ["node", "build/index.js"]
