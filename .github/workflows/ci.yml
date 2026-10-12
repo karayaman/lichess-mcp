@@ -25,7 +25,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: npm
-      # --ignore-scripts skips "prepare", which would run the build before we ask for it.
+      # --ignore-scripts stops dependencies' install scripts from running.
       - run: npm ci --ignore-scripts
       # build = typecheck + Vite UI bundles + server
       - run: npm run build
