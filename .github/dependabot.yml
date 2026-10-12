@@ -1,0 +1,25 @@
+# Monthly dependency updates, grouped so each ecosystem opens at most two PRs:
+# one for minor and patch updates, one for major updates (which may need code changes).
+# Security updates are separate: enable them in Settings > Code security, and
+# they open as soon as an advisory is published.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: monthly
+    groups:
+      npm-minor-and-patch:
+        patterns: ["*"]
+        update-types: [minor, patch]
+      npm-major:
+        patterns: ["*"]
+        update-types: [major]
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    groups:
+      github-actions:
+        patterns: ["*"]
