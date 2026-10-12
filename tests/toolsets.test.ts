@@ -1,7 +1,14 @@
 import { describe, it, expect } from "vitest";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
-import { allTools, CORE_TOOLSETS, TOOLSETS, selectTools } from "../src/tools/index.js";
+import { ToolListChangedNotificationSchema } from "@modelcontextprotocol/sdk/types.js";
+import {
+  allTools,
+  CORE_TOOLSETS,
+  TOOLSETS,
+  TOOLSET_DESCRIPTIONS,
+  selectTools,
+} from "../src/tools/index.js";
 import { buildServer } from "../src/server.js";
 import { makeContext } from "./helpers/mock.js";
 
@@ -78,7 +85,7 @@ describe("toolsets", () => {
     await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
 
     const { tools } = await client.listTools();
-    expect(names(tools)).toEqual(names(TOOLSETS.tv));
+    expect(names(tools)).toEqual(names([...TOOLSETS.tv, { name: "enable_toolset" }]));
 
     await client.close();
   });
@@ -90,8 +97,129 @@ describe("toolsets", () => {
     await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
 
     const { tools } = await client.listTools();
-    expect(tools).toHaveLength(allTools.length);
+    expect(names(tools)).toEqual(names([...allTools, { name: "enable_toolset" }]));
 
+    await client.close();
+  });
+});
+
+/** Connects a client to a server started with the given tools. */
+async function connect(tools: typeof allTools) {
+  const server = buildServer(makeContext(), tools);
+  const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+  const client = new Client({ name: "test", version: "0.0.0" });
+  await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+  return client;
+}
+
+const text = (result: Awaited<ReturnType<Client["callTool"]>>) =>
+  (result.content as { type: string; text: string }[]).map((c) => c.text).join("\n");
+
+describe("enable_toolset", () => {
+  it("describes every toolset in one line", () => {
+    expect(Object.keys(TOOLSET_DESCRIPTIONS).sort()).toEqual(Object.keys(TOOLSETS).sort());
+    for (const [name, line] of Object.entries(TOOLSET_DESCRIPTIONS)) {
+      expect(line, name).toMatch(/^[^\n]{10,120}$/);
+    }
+  });
+
+  it("is always registered, and its description lists the toolsets that are off", async () => {
+    const client = await connect(selectTools(undefined));
+    const { tools } = await client.listTools();
+    const tool = tools.find((t) => t.name === "enable_toolset");
+    expect(tool).toBeDefined();
+    for (const name of ["arena", "swiss", "bot", "broadcasts"]) {
+      expect(tool!.description).toContain(`\n- ${name}: ${TOOLSET_DESCRIPTIONS[name]}`);
+    }
+    for (const name of CORE_TOOLSETS) {
+      expect(tool!.description).not.toContain(`\n- ${name}: `);
+    }
+    await client.close();
+  });
+
+  it("only changes this server's tool list, never Lichess", async () => {
+    const client = await connect(selectTools(undefined));
+    const { tools } = await client.listTools();
+    expect(tools.find((t) => t.name === "enable_toolset")?.annotations).toMatchObject({
+      readOnlyHint: false,
+      destructiveHint: false,
+      openWorldHint: false,
+    });
+    await client.close();
+  });
+
+  it("adds a toolset's tools mid-session and tells the client the list changed", async () => {
+    const client = await connect(selectTools(undefined));
+    let changed = 0;
+    client.setNotificationHandler(ToolListChangedNotificationSchema, async () => {
+      changed++;
+    });
+
+    const result = await client.callTool({ name: "enable_toolset", arguments: { toolsets: ["arena"] } });
+    expect(result.isError).toBeFalsy();
+    expect(text(result)).toContain("create_arena");
+
+    const { tools } = await client.listTools();
+    expect(names(tools)).toEqual(
+      names([...selectTools("core,arena"), { name: "enable_toolset" }]),
+    );
+    await new Promise((r) => setTimeout(r, 0));
+    expect(changed).toBeGreaterThan(0);
+    await client.close();
+  });
+
+  it("accepts several toolsets, and 'all'", async () => {
+    const client = await connect(selectTools("tv"));
+    await client.callTool({ name: "enable_toolset", arguments: { toolsets: ["swiss", "teams"] } });
+    expect(names((await client.listTools()).tools)).toEqual(
+      names([...selectTools("tv,swiss,teams"), { name: "enable_toolset" }]),
+    );
+    await client.callTool({ name: "enable_toolset", arguments: { toolsets: ["all"] } });
+    expect(names((await client.listTools()).tools)).toEqual(
+      names([...allTools, { name: "enable_toolset" }]),
+    );
+    await client.close();
+  });
+
+  it("does nothing for a toolset that's already on", async () => {
+    const client = await connect(selectTools(undefined));
+    const before = names((await client.listTools()).tools);
+    const result = await client.callTool({ name: "enable_toolset", arguments: { toolsets: ["games"] } });
+    expect(result.isError).toBeFalsy();
+    expect(text(result)).toMatch(/already/i);
+    expect(names((await client.listTools()).tools)).toEqual(before);
+    await client.close();
+  });
+
+  it("rejects an unknown toolset and adds nothing", async () => {
+    const client = await connect(selectTools(undefined));
+    const before = names((await client.listTools()).tools);
+    const result = await client.callTool({
+      name: "enable_toolset",
+      arguments: { toolsets: ["arena", "arenas"] },
+    });
+    expect(result.isError).toBe(true);
+    expect(text(result)).toMatch(/arenas.*arena/s);
+    expect(names((await client.listTools()).tools)).toEqual(before);
+    await client.close();
+  });
+
+  it("serves the UI for a toolset that's enabled later", async () => {
+    // The resources capability can't be added after connecting, so UI
+    // resources are served from the start, whichever toolsets are on.
+    const client = await connect(selectTools("tv"));
+    const appTools = TOOLSETS.apps.filter((t) => t.ui?.resourceUri);
+    const uris = (await client.listResources()).resources.map((r) => r.uri);
+    for (const t of appTools) expect(uris).toContain(t.ui!.resourceUri);
+
+    const result = await client.callTool({ name: "enable_toolset", arguments: { toolsets: ["apps"] } });
+    expect(result.isError).toBeFalsy();
+    const { tools } = await client.listTools();
+    for (const t of appTools) {
+      expect(tools.find((x) => x.name === t.name)?._meta).toMatchObject({
+        ui: { resourceUri: t.ui!.resourceUri },
+      });
+    }
     await client.close();
   });
 });
