@@ -89,10 +89,8 @@ describe("create_study", () => {
     const mock = installFetchMock();
     mock.respondJson({ id: "newStudy" });
 
-    await findTool("create_study").handler(
-      { name: "My Study", visibility: "public" },
-      makeContext(),
-    );
+    const args = findTool("create_study").schema.parse({ name: "My Study", visibility: "public" });
+    await findTool("create_study").handler(args, makeContext());
 
     const [url, init] = mock.mock.calls[0] as [string, RequestInit & { headers: Headers }];
     expect(url).toBe(apiUrl("/study"));
