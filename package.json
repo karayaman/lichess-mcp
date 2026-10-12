@@ -27,17 +27,17 @@
     "test:docker": "docker build -t lichess-mcp:smoke . && node scripts/docker-smoke.mjs lichess-mcp:smoke"
   },
   "dependencies": {
-    "@modelcontextprotocol/ext-apps": "^1.7.1",
+    "@modelcontextprotocol/ext-apps": "^2.0.3",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "chess.js": "^1.4.0",
-    "dotenv": "^16.3.1",
+    "dotenv": "^18.0.6",
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@types/node": ">=22.12.0",
+    "@types/node": ">=26.6.4",
     "@vitest/coverage-v8": "^5.0.4",
     "chessground": "^9.2.1",
-    "typescript": "^5.3.3",
+    "typescript": "^7.0.2",
     "vite": "^8.3.4",
     "vite-plugin-singlefile": "^2.3.3",
     "vitest": "^5.0.4"
