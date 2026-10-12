@@ -5,7 +5,7 @@ FROM node:lts-alpine AS builder
 WORKDIR /usr/src/app
 
 # Install dependencies first so this layer is cached across source changes.
-# --ignore-scripts skips the "prepare" build, which needs the sources below.
+# --ignore-scripts stops dependencies' install scripts from running.
 COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts
 

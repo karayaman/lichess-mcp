@@ -1,4 +1,5 @@
 import { randomBytes } from "node:crypto";
+import { createRequire } from "node:module";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import {
   registerAppTool,
@@ -19,8 +20,11 @@ import { registerPrompts } from "./prompts/index.js";
 import { readUiHtml } from "./ui-loader.js";
 import { UI_META_KEY } from "./types/ui-props.js";
 
+// package.json sits one level above both src/ (tests) and build/ (runtime).
+const { version } = createRequire(import.meta.url)("../package.json") as { version: string };
+
 export function buildServer(ctx: ToolContext): McpServer {
-  const mcp = new McpServer({ name: "lichess-mcp", version: "0.2.0" });
+  const mcp = new McpServer({ name: "lichess-mcp", version });
 
   // De-dupe resource registrations across multiple tools that share a UI.
   const registeredResources = new Set<string>();

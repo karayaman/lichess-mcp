@@ -1,6 +1,7 @@
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { App } from "@modelcontextprotocol/ext-apps";
 import { UI_META_KEY } from "../../types/ui-props.js";
+import { version } from "../../../package.json";
 
 export interface AppHandle<P> {
   app: App;
@@ -27,7 +28,7 @@ export function extractUiProps<P>(result: CallToolResult): P | undefined {
  * miss the very first `tool-result` that opened the iframe.
  */
 export async function bootstrap<P>(name: string): Promise<AppHandle<P>> {
-  const app = new App({ name, version: "0.2.0" });
+  const app = new App({ name, version });
 
   const subscribers: Array<(p: P) => void> = [];
   let resolveInitial!: (props: P) => void;

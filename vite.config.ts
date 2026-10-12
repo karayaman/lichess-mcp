@@ -16,16 +16,16 @@ if (!ALLOWED.includes(target)) {
 }
 
 export default defineConfig({
-  root: resolve(__dirname, `src/ui/${target}`),
+  root: resolve(import.meta.dirname, `src/ui/${target}`),
   base: "./",
   plugins: [viteSingleFile()],
   build: {
-    outDir: resolve(__dirname, "build/ui"),
+    outDir: resolve(import.meta.dirname, "build/ui"),
     emptyOutDir: false,
     assetsInlineLimit: Infinity,
     cssCodeSplit: false,
     rollupOptions: {
-      input: resolve(__dirname, `src/ui/${target}/index.html`),
+      input: resolve(import.meta.dirname, `src/ui/${target}/index.html`),
       output: {
         entryFileNames: `${target}.js`,
       },
