@@ -23,30 +23,77 @@ import { tvTools } from "./tv.js";
 import { usersTools } from "./users.js";
 
 /**
- * Aggregated tool registry. Each domain module exports an array of tools;
- * we concatenate them here so server.ts has a single source of truth.
+ * Tools grouped by Lichess area. The server registers only the toolsets named
+ * in LICHESS_TOOLSETS, because every registered tool's definition is sent to
+ * the model each session.
  */
-export const allTools: AnyToolDefinition[] = [
-  ...accountTools,
-  ...usersTools,
-  ...relationsTools,
-  ...messagingTools,
-  ...gamesTools,
-  ...boardTools,
-  ...botTools,
-  ...bulkPairingsTools,
-  ...engineTools,
-  ...openingExplorerTools,
-  ...tablebaseTools,
-  ...challengesTools,
-  ...arenaTools,
-  ...swissTools,
-  ...simulTools,
-  ...teamsTools,
-  ...studiesTools,
-  ...broadcastsTools,
-  ...puzzlesTools,
-  ...tvTools,
-  ...analysisTools,
-  ...appTools,
-];
+export const TOOLSETS: Record<string, AnyToolDefinition[]> = {
+  account: accountTools,
+  users: usersTools,
+  relations: relationsTools,
+  messaging: messagingTools,
+  games: gamesTools,
+  board: boardTools,
+  bot: botTools,
+  "bulk-pairings": bulkPairingsTools,
+  engine: engineTools,
+  "opening-explorer": openingExplorerTools,
+  tablebase: tablebaseTools,
+  challenges: challengesTools,
+  arena: arenaTools,
+  swiss: swissTools,
+  simuls: simulTools,
+  teams: teamsTools,
+  studies: studiesTools,
+  broadcasts: broadcastsTools,
+  puzzles: puzzlesTools,
+  tv: tvTools,
+  analysis: analysisTools,
+  apps: appTools,
+};
+
+/** Enabled when LICHESS_TOOLSETS is unset: looking up, reviewing and studying games. */
+export const CORE_TOOLSETS = [
+  "account",
+  "users",
+  "relations",
+  "messaging",
+  "games",
+  "opening-explorer",
+  "tablebase",
+  "puzzles",
+  "tv",
+  "analysis",
+  "apps",
+] as const;
+
+/** Every tool, in every toolset. */
+export const allTools: AnyToolDefinition[] = Object.values(TOOLSETS).flat();
+
+/**
+ * Resolves a LICHESS_TOOLSETS value such as "core,arena,swiss" to tools.
+ * Unset or empty means "core"; "all" means every toolset.
+ */
+export function selectTools(spec: string | undefined): AnyToolDefinition[] {
+  const requested = (spec ?? "")
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+  if (requested.length === 0) requested.push("core");
+
+  const selected = new Set<string>();
+  for (const name of requested) {
+    if (name === "all") Object.keys(TOOLSETS).forEach((k) => selected.add(k));
+    else if (name === "core") CORE_TOOLSETS.forEach((k) => selected.add(k));
+    else if (name in TOOLSETS) selected.add(name);
+    else {
+      throw new Error(
+        `Unknown toolset "${name}" in LICHESS_TOOLSETS. ` +
+          `Valid: core, all, ${Object.keys(TOOLSETS).join(", ")}.`,
+      );
+    }
+  }
+  return Object.entries(TOOLSETS)
+    .filter(([k]) => selected.has(k))
+    .flatMap(([, tools]) => tools);
+}

@@ -23,13 +23,13 @@ import { UI_META_KEY } from "./types/ui-props.js";
 // package.json sits one level above both src/ (tests) and build/ (runtime).
 const { version } = createRequire(import.meta.url)("../package.json") as { version: string };
 
-export function buildServer(ctx: ToolContext): McpServer {
+export function buildServer(ctx: ToolContext, tools: AnyToolDefinition[] = allTools): McpServer {
   const mcp = new McpServer({ name: "lichess-mcp", version });
 
   // De-dupe resource registrations across multiple tools that share a UI.
   const registeredResources = new Set<string>();
 
-  for (const t of allTools) {
+  for (const t of tools) {
     if (t.ui) {
       const ui = t.ui;
       const uiMeta: { resourceUri?: string; visibility?: typeof ui.visibility } = {};

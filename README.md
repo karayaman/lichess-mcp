@@ -73,6 +73,8 @@ get_user_profile({
 
 ### 2. Game Play
 
+Needs the `challenges` and `board` toolsets (see [Toolsets](#toolsets)).
+
 ```typescript
 // Create a challenge against another player
 create_challenge({
@@ -112,6 +114,8 @@ get_cloud_eval({
 
 ### 4. Tournaments
 
+Needs the `arena` toolset (see [Toolsets](#toolsets)).
+
 ```typescript
 // List current tournaments
 get_arena_tournaments();
@@ -148,6 +152,22 @@ view_pgn({ pgn: "1. e4 e5 2. Nf3 ..." });
 // Walk the opening tree: click moves to drill down; toggle masters/lichess.
 explore_openings({ source: "masters" });
 ```
+
+## Toolsets
+
+The server has about 190 tools. Every enabled tool's description is sent to the model at the start of each session, so by default only the core toolsets are on: about 70 tools, a third of the full list's size.
+
+Choose toolsets with `LICHESS_TOOLSETS`, a comma-separated list:
+
+| Value | Enables |
+| --- | --- |
+| *(unset)* or `core` | `account`, `users`, `relations`, `messaging`, `games`, `opening-explorer`, `tablebase`, `puzzles`, `tv`, `analysis`, `apps` |
+| `core,challenges,board` | core, plus challenging players and playing games |
+| `all` | every toolset |
+
+The other toolsets are `board`, `bot`, `bulk-pairings`, `engine`, `challenges`, `arena`, `swiss`, `simuls`, `teams`, `studies` and `broadcasts`. A name not on this list stops the server at startup with the valid names.
+
+Set it alongside the token, for example `"env": { "LICHESS_TOOLSETS": "core,arena,swiss" }` in your MCP client's config.
 
 ## Chess Notation
 
