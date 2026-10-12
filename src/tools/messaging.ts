@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { AnyToolDefinition, tool, ADDITIVE, READ_ONLY } from "../registry.js";
+import { SITE_BASE_URL } from "../http/client.js";
 
 const sendMessage = tool({
   name: "send_message",
@@ -10,7 +11,7 @@ const sendMessage = tool({
     text: z.string().min(1).describe("Message text"),
   }),
   handler: async ({ username, text }, { client }) => {
-    await client.postForm(`/inbox/${encodeURIComponent(username)}`, { text });
+    await client.postForm(`/inbox/${encodeURIComponent(username)}`, { text }, { baseUrl: SITE_BASE_URL });
     return `Message successfully sent to ${username}`;
   },
 });

@@ -5,6 +5,7 @@ import {
   findTool,
   expectFetch,
   apiUrl,
+  lichessUrl,
 } from "../helpers/mock.js";
 
 beforeEach(() => {
@@ -109,7 +110,7 @@ describe("create_broadcast_tournament", () => {
     );
 
     const [url, init] = mock.mock.calls[0] as [string, RequestInit & { headers: Headers }];
-    expect(url).toContain("/broadcast/new");
+    expect(url).toBe(lichessUrl("/broadcast/new"));
     expect(init.method).toBe("POST");
     expect(init.body?.toString()).toContain("name=My+Championship");
   });
@@ -140,7 +141,7 @@ describe("get_broadcast_players", () => {
     );
 
     const [url] = mock.mock.calls[0] as [string, unknown];
-    expect(url).toContain("/broadcast/bid/players");
+    expect(url).toBe(lichessUrl("/broadcast/bid/players"));
   });
 });
 
@@ -155,7 +156,7 @@ describe("get_broadcast_player", () => {
     );
 
     const [url] = mock.mock.calls[0] as [string, unknown];
-    expect(url).toContain("/broadcast/bid/players/12345");
+    expect(url).toBe(lichessUrl("/broadcast/bid/players/12345"));
   });
 });
 
@@ -170,7 +171,7 @@ describe("get_broadcast_team_leaderboard", () => {
     );
 
     const [url] = mock.mock.calls[0] as [string, unknown];
-    expect(url).toContain("/broadcast/bid/teams/standings");
+    expect(url).toBe(lichessUrl("/broadcast/bid/teams/standings"));
   });
 });
 
@@ -185,7 +186,7 @@ describe("update_broadcast_tournament", () => {
     );
 
     const [url, init] = mock.mock.calls[0] as [string, RequestInit & { headers: Headers }];
-    expect(url).toContain("/broadcast/bid/edit");
+    expect(url).toBe(lichessUrl("/broadcast/bid/edit"));
     expect(init.body?.toString()).toContain("name=Updated+Name");
   });
 });
@@ -201,7 +202,7 @@ describe("create_broadcast_round", () => {
     );
 
     const [url, init] = mock.mock.calls[0] as [string, RequestInit & { headers: Headers }];
-    expect(url).toContain("/broadcast/bid/new");
+    expect(url).toBe(lichessUrl("/broadcast/bid/new"));
     expect(init.body?.toString()).toContain("name=Round+1");
   });
 });
@@ -236,7 +237,7 @@ describe("update_broadcast_round", () => {
     );
 
     const [url, init] = mock.mock.calls[0] as [string, RequestInit & { headers: Headers }];
-    expect(url).toContain("/broadcast/round/rid/edit");
+    expect(url).toBe(lichessUrl("/broadcast/round/rid/edit"));
     expect(init.body?.toString()).toContain("name=Round+2");
   });
 });

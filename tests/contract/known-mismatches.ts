@@ -13,20 +13,6 @@ const group = (reason: string, mismatches: string[]): KnownMismatch[] =>
  * run fails if an entry stops occurring, so this list can only shrink.
  */
 export const KNOWN_MISMATCHES: KnownMismatch[] = [
-  ...group("Endpoint lives at the site root, not under /api. Confirmed live: the /api path returns 404 and the root path exists.", [
-    "GET https://lichess.org/api/broadcast/bid/players API_PREFIX spec path is /broadcast/{broadcastTournamentId}/players",
-    "GET https://lichess.org/api/broadcast/bid/players/12345 API_PREFIX spec path is /broadcast/{broadcastTournamentId}/players/{playerId}",
-    "GET https://lichess.org/api/broadcast/bid/teams/standings API_PREFIX spec path is /broadcast/{broadcastTournamentId}/teams/standings",
-    "POST https://lichess.org/api/broadcast/bid/edit API_PREFIX spec path is /broadcast/{broadcastTournamentId}/edit",
-    "POST https://lichess.org/api/broadcast/bid/new API_PREFIX spec path is /broadcast/{broadcastTournamentId}/new",
-    "POST https://lichess.org/api/broadcast/new API_PREFIX spec path is /broadcast/new",
-    "POST https://lichess.org/api/broadcast/round/rid/edit API_PREFIX spec path is /broadcast/round/{broadcastRoundId}/edit",
-    "POST https://lichess.org/api/inbox/a%20b API_PREFIX spec path is /inbox/{username}",
-    "POST https://lichess.org/api/inbox/alice API_PREFIX spec path is /inbox/{username}",
-    "POST https://lichess.org/api/team/lichess-coders/join API_PREFIX spec path is /team/{teamId}/join",
-    "POST https://lichess.org/api/team/lichess-coders/pm-all API_PREFIX spec path is /team/{teamId}/pm-all",
-    "POST https://lichess.org/api/team/lichess-coders/quit API_PREFIX spec path is /team/{teamId}/quit",
-  ]),
   ...group("Not in the Lichess API spec, so the endpoint probably doesn't exist (simul create/join/withdraw, reading an inbox thread).", [
     "GET https://lichess.org/api/inbox/a%20b UNKNOWN_PATH",
     "GET https://lichess.org/api/inbox/alice UNKNOWN_PATH",

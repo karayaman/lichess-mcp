@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { AnyToolDefinition, tool, ADDITIVE, DESTRUCTIVE, READ_ONLY } from "../registry.js";
+import { SITE_BASE_URL } from "../http/client.js";
 
 const broadcastTourIdSchema = z.object({
   broadcastTournamentId: z.string().trim().min(1).describe("The broadcast tournament ID"),
@@ -76,7 +77,7 @@ const createBroadcastTournament = tool({
     markdown: z.string().optional().describe("Markdown description"),
   }),
   handler: async (fields, { client }) => {
-    const response = await client.postForm("/broadcast/new", fields);
+    const response = await client.postForm("/broadcast/new", fields, { baseUrl: SITE_BASE_URL });
     return (await response.json()) as object;
   },
 });
@@ -96,7 +97,7 @@ const getBroadcastPlayers = tool({
   description: "Get all players in a broadcast tournament",
   schema: broadcastTourIdSchema,
   handler: async ({ broadcastTournamentId }, { client }) =>
-    client.json(`/broadcast/${encodeURIComponent(broadcastTournamentId)}/players`),
+    client.json(`/broadcast/${encodeURIComponent(broadcastTournamentId)}/players`, { baseUrl: SITE_BASE_URL }),
 });
 
 const getBroadcastPlayer = tool({
@@ -110,6 +111,7 @@ const getBroadcastPlayer = tool({
   handler: async ({ broadcastTournamentId, playerId }, { client }) =>
     client.json(
       `/broadcast/${encodeURIComponent(broadcastTournamentId)}/players/${encodeURIComponent(playerId)}`,
+      { baseUrl: SITE_BASE_URL },
     ),
 });
 
@@ -121,6 +123,7 @@ const getBroadcastTeamLeaderboard = tool({
   handler: async ({ broadcastTournamentId }, { client }) =>
     client.json(
       `/broadcast/${encodeURIComponent(broadcastTournamentId)}/teams/standings`,
+      { baseUrl: SITE_BASE_URL },
     ),
 });
 
@@ -138,6 +141,7 @@ const updateBroadcastTournament = tool({
     await client.postForm(
       `/broadcast/${encodeURIComponent(broadcastTournamentId)}/edit`,
       fields,
+      { baseUrl: SITE_BASE_URL },
     );
     return `Broadcast tournament ${broadcastTournamentId} updated`;
   },
@@ -156,6 +160,7 @@ const createBroadcastRound = tool({
     const response = await client.postForm(
       `/broadcast/${encodeURIComponent(broadcastTournamentId)}/new`,
       fields,
+      { baseUrl: SITE_BASE_URL },
     );
     return (await response.json()) as object;
   },
@@ -186,7 +191,11 @@ const updateBroadcastRound = tool({
     startsAt: z.number().int().optional(),
   }),
   handler: async ({ broadcastRoundId, ...fields }, { client }) => {
-    await client.postForm(`/broadcast/round/${encodeURIComponent(broadcastRoundId)}/edit`, fields);
+    await client.postForm(
+      `/broadcast/round/${encodeURIComponent(broadcastRoundId)}/edit`,
+      fields,
+      { baseUrl: SITE_BASE_URL },
+    );
     return `Broadcast round ${broadcastRoundId} updated`;
   },
 });

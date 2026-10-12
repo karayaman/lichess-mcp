@@ -5,6 +5,7 @@ import {
   findTool,
   expectFetch,
   apiUrl,
+  lichessUrl,
 } from "../helpers/mock.js";
 
 beforeEach(() => {
@@ -53,7 +54,7 @@ describe("get_team_join_requests", () => {
 });
 
 describe("join_team", () => {
-  it("POSTs form data to /api/team/{teamId}/join", async () => {
+  it("POSTs form data to /team/{teamId}/join", async () => {
     const mock = installFetchMock();
     mock.respondStatus(200);
 
@@ -63,19 +64,19 @@ describe("join_team", () => {
     );
 
     const [url, init] = mock.mock.calls[0] as [string, RequestInit & { headers: Headers }];
-    expect(url).toContain("/team/lichess-coders/join");
+    expect(url).toBe(lichessUrl("/team/lichess-coders/join"));
     expect(init.body?.toString()).toContain("message=Please+let+me+join%21");
   });
 });
 
 describe("leave_team", () => {
-  it("POSTs to /api/team/{teamId}/quit", async () => {
+  it("POSTs to /team/{teamId}/quit", async () => {
     const mock = installFetchMock();
     mock.respondStatus(200);
 
     await findTool("leave_team").handler({ teamId: "lichess-coders" }, makeContext());
 
-    expectFetch(mock, { method: "POST", url: apiUrl("/team/lichess-coders/quit") });
+    expectFetch(mock, { method: "POST", url: lichessUrl("/team/lichess-coders/quit") });
   });
 });
 
@@ -236,7 +237,7 @@ describe("pm_all_team_members", () => {
     );
 
     const [url, init] = mock.mock.calls[0] as [string, RequestInit & { headers: Headers }];
-    expect(url).toContain("/team/lichess-coders/pm-all");
+    expect(url).toBe(lichessUrl("/team/lichess-coders/pm-all"));
     expect(init.body?.toString()).toContain("message=Tournament+starting+soon%21");
   });
 });
