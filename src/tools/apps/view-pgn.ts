@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Chess } from "chess.js";
-import { tool } from "../../registry.js";
+import { tool, READ_ONLY } from "../../registry.js";
 import type {
   PgnHeaders,
   PgnProps,
@@ -54,6 +54,7 @@ function extractHeaders(pgn: string): PgnHeaders {
 
 export const viewPgn = tool({
   name: "view_pgn",
+  annotations: READ_ONLY,
   description:
     "Open an interactive PGN viewer in Claude Desktop with a real chess board, prev/next/play controls, and clickable move list. Provide either gameId (Lichess game) or a raw PGN string.",
   schema: z

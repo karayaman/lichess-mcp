@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, ADDITIVE, DESTRUCTIVE, READ_ONLY } from "../registry.js";
 
 const engineIdSchema = z.object({
   id: z.string().trim().min(1).describe("The external engine ID"),
@@ -20,6 +20,7 @@ const engineBodySchema = {
 
 const listExternalEngines = tool({
   name: "list_external_engines",
+  annotations: READ_ONLY,
   description: "List all external engines registered for the current user",
   schema: z.object({}),
   handler: async (_args, { client }) => client.json("/external-engine"),
@@ -27,6 +28,7 @@ const listExternalEngines = tool({
 
 const createExternalEngine = tool({
   name: "create_external_engine",
+  annotations: ADDITIVE,
   description: "Register a new external analysis engine",
   schema: z.object(engineBodySchema),
   handler: async (body, { client }) => {
@@ -37,6 +39,7 @@ const createExternalEngine = tool({
 
 const getExternalEngine = tool({
   name: "get_external_engine",
+  annotations: READ_ONLY,
   description: "Get a specific external engine by ID",
   schema: engineIdSchema,
   handler: async ({ id }, { client }) =>
@@ -45,6 +48,7 @@ const getExternalEngine = tool({
 
 const updateExternalEngine = tool({
   name: "update_external_engine",
+  annotations: DESTRUCTIVE,
   description: "Update an external engine",
   schema: z.object({
     id: z.string().trim().min(1).describe("The external engine ID"),
@@ -62,6 +66,7 @@ const updateExternalEngine = tool({
 
 const deleteExternalEngine = tool({
   name: "delete_external_engine",
+  annotations: DESTRUCTIVE,
   description: "Delete an external engine",
   schema: engineIdSchema,
   handler: async ({ id }, { client }) => {
@@ -72,6 +77,7 @@ const deleteExternalEngine = tool({
 
 const analyseWithExternalEngine = tool({
   name: "analyse_with_external_engine",
+  annotations: ADDITIVE,
   description: "Request analysis from an external engine",
   schema: z.object({
     id: z.string().trim().min(1).describe("The external engine ID"),
@@ -96,6 +102,7 @@ const analyseWithExternalEngine = tool({
 
 const acquireExternalEngineWork = tool({
   name: "acquire_external_engine_work",
+  annotations: ADDITIVE,
   description: "Long-poll for analysis work from an engine provider",
   schema: z.object({
     providerSecret: z.string().min(16).describe("The engine provider secret"),
@@ -108,6 +115,7 @@ const acquireExternalEngineWork = tool({
 
 const submitExternalEngineWork = tool({
   name: "submit_external_engine_work",
+  annotations: ADDITIVE,
   description: "Submit analysis results for a work request",
   schema: z.object({
     id: z.string().trim().min(1).describe("The work request ID"),

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, ADDITIVE, READ_ONLY } from "../registry.js";
 import { LichessClient } from "../http/client.js";
 import { parseNdjson } from "../http/parse.js";
 
@@ -55,6 +55,7 @@ const exportGameSchema = z.object({
 
 const exportGame = tool({
   name: "export_game",
+  annotations: READ_ONLY,
   description: "Export one game in PGN or JSON format",
   schema: exportGameSchema,
   handler: async ({ gameId, ...flags }, { client }) => {
@@ -70,6 +71,7 @@ const exportGame = tool({
 
 const exportOngoingGame = tool({
   name: "export_ongoing_game",
+  annotations: READ_ONLY,
   description: "Export the ongoing game of a user",
   schema: z.object({
     username: z.string().trim().min(1).describe("The username"),
@@ -92,6 +94,7 @@ const exportOngoingGame = tool({
 
 const exportUserGames = tool({
   name: "export_user_games",
+  annotations: READ_ONLY,
   description: "Export all games of a user (PGN or NDJSON)",
   schema: z.object({
     username: z.string().trim().min(1),
@@ -144,6 +147,7 @@ const exportUserGames = tool({
 
 const exportGamesByIds = tool({
   name: "export_games_by_ids",
+  annotations: READ_ONLY,
   description: "Export multiple games by IDs (POST body)",
   schema: z.object({
     ids: z
@@ -177,6 +181,7 @@ const exportGamesByIds = tool({
 
 const getOngoingGames = tool({
   name: "get_ongoing_games",
+  annotations: READ_ONLY,
   description: "Get your ongoing games (real-time and correspondence)",
   schema: z.object({
     nb: z
@@ -192,6 +197,7 @@ const getOngoingGames = tool({
 
 const getGameChat = tool({
   name: "get_game_chat",
+  annotations: READ_ONLY,
   description: "Get the chat messages of a game",
   schema: z.object({
     gameId: z.string().trim().min(1).describe("The game ID"),
@@ -202,6 +208,7 @@ const getGameChat = tool({
 
 const importGame = tool({
   name: "import_game",
+  annotations: ADDITIVE,
   description: "Import a game from PGN",
   schema: z.object({
     pgn: z.string().trim().min(1).describe("PGN of the game"),
@@ -214,6 +221,7 @@ const importGame = tool({
 
 const getImportedGames = tool({
   name: "get_imported_games",
+  annotations: READ_ONLY,
   description: "Export games imported by the logged-in user",
   schema: z.object({}),
   handler: async (_args, { client }) =>
@@ -222,6 +230,7 @@ const getImportedGames = tool({
 
 const getBookmarkedGames = tool({
   name: "get_bookmarked_games",
+  annotations: READ_ONLY,
   description: "Export games bookmarked by the logged-in user",
   schema: z.object({}),
   handler: async (_args, { client }) =>

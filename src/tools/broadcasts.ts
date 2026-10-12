@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, ADDITIVE, DESTRUCTIVE, READ_ONLY } from "../registry.js";
 
 const broadcastTourIdSchema = z.object({
   broadcastTournamentId: z.string().trim().min(1).describe("The broadcast tournament ID"),
@@ -12,6 +12,7 @@ const pgnFlags = {
 
 const getOfficialBroadcasts = tool({
   name: "get_official_broadcasts",
+  annotations: READ_ONLY,
   description: "Get official Lichess broadcasts (paginated)",
   schema: z.object({
     nb: z.number().int().min(1).optional().describe("Max number of broadcasts to return"),
@@ -24,6 +25,7 @@ const getOfficialBroadcasts = tool({
 
 const getTopBroadcasts = tool({
   name: "get_top_broadcasts",
+  annotations: READ_ONLY,
   description: "Get the top broadcasts (featured tournaments)",
   schema: z.object({
     page: z.number().int().min(1).optional().describe("Page number"),
@@ -36,6 +38,7 @@ const getTopBroadcasts = tool({
 
 const getBroadcastsByUser = tool({
   name: "get_broadcasts_by_user",
+  annotations: READ_ONLY,
   description: "Get broadcasts created by a user",
   schema: z.object({
     username: z.string().trim().min(1).describe("Username of the broadcast creator"),
@@ -49,6 +52,7 @@ const getBroadcastsByUser = tool({
 
 const searchBroadcasts = tool({
   name: "search_broadcasts",
+  annotations: READ_ONLY,
   description: "Search broadcasts",
   schema: z.object({
     q: z.string().trim().min(1).describe("Search query"),
@@ -63,6 +67,7 @@ const searchBroadcasts = tool({
 
 const createBroadcastTournament = tool({
   name: "create_broadcast_tournament",
+  annotations: ADDITIVE,
   description: "Create a new broadcast tournament",
   schema: z.object({
     name: z.string().trim().min(1).describe("Name of the broadcast"),
@@ -78,6 +83,7 @@ const createBroadcastTournament = tool({
 
 const getBroadcastTournament = tool({
   name: "get_broadcast_tournament",
+  annotations: READ_ONLY,
   description: "Get a broadcast tournament by ID",
   schema: broadcastTourIdSchema,
   handler: async ({ broadcastTournamentId }, { client }) =>
@@ -86,6 +92,7 @@ const getBroadcastTournament = tool({
 
 const getBroadcastPlayers = tool({
   name: "get_broadcast_players",
+  annotations: READ_ONLY,
   description: "Get all players in a broadcast tournament",
   schema: broadcastTourIdSchema,
   handler: async ({ broadcastTournamentId }, { client }) =>
@@ -94,6 +101,7 @@ const getBroadcastPlayers = tool({
 
 const getBroadcastPlayer = tool({
   name: "get_broadcast_player",
+  annotations: READ_ONLY,
   description: "Get a specific player in a broadcast tournament",
   schema: z.object({
     broadcastTournamentId: z.string().trim().min(1),
@@ -107,6 +115,7 @@ const getBroadcastPlayer = tool({
 
 const getBroadcastTeamLeaderboard = tool({
   name: "get_broadcast_team_leaderboard",
+  annotations: READ_ONLY,
   description: "Get team standings of a broadcast tournament",
   schema: broadcastTourIdSchema,
   handler: async ({ broadcastTournamentId }, { client }) =>
@@ -117,6 +126,7 @@ const getBroadcastTeamLeaderboard = tool({
 
 const updateBroadcastTournament = tool({
   name: "update_broadcast_tournament",
+  annotations: DESTRUCTIVE,
   description: "Update a broadcast tournament",
   schema: z.object({
     broadcastTournamentId: z.string().trim().min(1),
@@ -135,6 +145,7 @@ const updateBroadcastTournament = tool({
 
 const createBroadcastRound = tool({
   name: "create_broadcast_round",
+  annotations: ADDITIVE,
   description: "Create a new round in a broadcast tournament",
   schema: z.object({
     broadcastTournamentId: z.string().trim().min(1),
@@ -152,6 +163,7 @@ const createBroadcastRound = tool({
 
 const getBroadcastRound = tool({
   name: "get_broadcast_round",
+  annotations: READ_ONLY,
   description: "Get a broadcast round by its slug and ID",
   schema: z.object({
     broadcastTournamentSlug: z.string().trim().min(1),
@@ -166,6 +178,7 @@ const getBroadcastRound = tool({
 
 const updateBroadcastRound = tool({
   name: "update_broadcast_round",
+  annotations: DESTRUCTIVE,
   description: "Update a broadcast round",
   schema: z.object({
     broadcastRoundId: z.string().trim().min(1).describe("The broadcast round ID"),
@@ -180,6 +193,7 @@ const updateBroadcastRound = tool({
 
 const resetBroadcastRound = tool({
   name: "reset_broadcast_round",
+  annotations: DESTRUCTIVE,
   description: "Reset a broadcast round (clear all games)",
   schema: z.object({
     broadcastRoundId: z.string().trim().min(1).describe("The broadcast round ID"),
@@ -192,6 +206,7 @@ const resetBroadcastRound = tool({
 
 const pushBroadcastRoundPgn = tool({
   name: "push_broadcast_round_pgn",
+  annotations: DESTRUCTIVE,
   description: "Push PGN moves to a broadcast round",
   schema: z.object({
     broadcastRoundId: z.string().trim().min(1).describe("The broadcast round ID"),
@@ -209,6 +224,7 @@ const pushBroadcastRoundPgn = tool({
 
 const getBroadcastRoundPgn = tool({
   name: "get_broadcast_round_pgn",
+  annotations: READ_ONLY,
   description: "Download all games of a broadcast round as PGN",
   schema: z.object({
     broadcastRoundId: z.string().trim().min(1).describe("The broadcast round ID"),
@@ -226,6 +242,7 @@ const getBroadcastRoundPgn = tool({
 
 const getBroadcastAllRoundsPgn = tool({
   name: "get_broadcast_all_rounds_pgn",
+  annotations: READ_ONLY,
   description: "Download all games of all rounds of a broadcast as PGN",
   schema: z.object({
     broadcastTournamentId: z.string().trim().min(1).describe("The broadcast tournament ID"),
@@ -243,6 +260,7 @@ const getBroadcastAllRoundsPgn = tool({
 
 const getMyBroadcastRounds = tool({
   name: "get_my_broadcast_rounds",
+  annotations: READ_ONLY,
   description: "Get all broadcast rounds managed by the logged-in user",
   schema: z.object({
     nb: z.number().int().min(1).optional().describe("Number of rounds to return"),

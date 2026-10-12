@@ -1,10 +1,11 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, ADDITIVE, DESTRUCTIVE, READ_ONLY } from "../registry.js";
 
 const gameIdSchema = z.string().trim().min(1).describe("The game ID");
 
 const makeBoardMove = tool({
   name: "make_board_move",
+  annotations: ADDITIVE,
   description: "Make a move in an ongoing board game",
   schema: z.object({
     gameId: gameIdSchema,
@@ -20,6 +21,7 @@ const makeBoardMove = tool({
 
 const makeMove = tool({
   name: "make_move",
+  annotations: ADDITIVE,
   description: "Make a move in an ongoing game",
   schema: z.object({
     gameId: gameIdSchema,
@@ -35,6 +37,7 @@ const makeMove = tool({
 
 const abortBoardGame = tool({
   name: "abort_board_game",
+  annotations: DESTRUCTIVE,
   description: "Abort a board game",
   schema: z.object({ gameId: gameIdSchema }),
   handler: async ({ gameId }, { client }) => {
@@ -45,6 +48,7 @@ const abortBoardGame = tool({
 
 const resignBoardGame = tool({
   name: "resign_board_game",
+  annotations: DESTRUCTIVE,
   description: "Resign a board game",
   schema: z.object({ gameId: gameIdSchema }),
   handler: async ({ gameId }, { client }) => {
@@ -55,6 +59,7 @@ const resignBoardGame = tool({
 
 const writeInChat = tool({
   name: "write_in_chat",
+  annotations: ADDITIVE,
   description: "Write in the chat of a board game",
   schema: z.object({
     gameId: gameIdSchema,
@@ -69,6 +74,7 @@ const writeInChat = tool({
 
 const handleDrawBoardGame = tool({
   name: "handle_draw_board_game",
+  annotations: DESTRUCTIVE,
   description: "Accept or decline a draw offer in a board game",
   schema: z.object({
     gameId: gameIdSchema,
@@ -84,6 +90,7 @@ const handleDrawBoardGame = tool({
 
 const claimVictory = tool({
   name: "claim_victory",
+  annotations: DESTRUCTIVE,
   description: "Claim victory if opponent abandoned the game",
   schema: z.object({ gameId: gameIdSchema }),
   handler: async ({ gameId }, { client }) => {
@@ -94,6 +101,7 @@ const claimVictory = tool({
 
 const streamEvents = tool({
   name: "stream_events",
+  annotations: READ_ONLY,
   description: "Stream incoming events (challenges and game starts) for the current user",
   schema: z.object({}),
   handler: async (_args, { client }) => {
@@ -103,6 +111,7 @@ const streamEvents = tool({
 
 const createSeek = tool({
   name: "create_seek",
+  annotations: ADDITIVE,
   description: "Create a public seek to start a game with a random player",
   schema: z.object({
     rated: z.boolean().optional().default(false).describe("Whether the game is rated"),
@@ -130,6 +139,7 @@ const createSeek = tool({
 
 const streamBoardGame = tool({
   name: "stream_board_game",
+  annotations: READ_ONLY,
   description: "Stream the state of a board game (returns first event)",
   schema: z.object({ gameId: gameIdSchema }),
   handler: async ({ gameId }, { client }) => {
@@ -141,6 +151,7 @@ const streamBoardGame = tool({
 
 const getBoardGameChat = tool({
   name: "get_board_game_chat",
+  annotations: READ_ONLY,
   description: "Get the chat messages of a board game",
   schema: z.object({ gameId: gameIdSchema }),
   handler: async ({ gameId }, { client }) =>
@@ -149,6 +160,7 @@ const getBoardGameChat = tool({
 
 const handleTakebackBoardGame = tool({
   name: "handle_takeback_board_game",
+  annotations: DESTRUCTIVE,
   description: "Accept or decline a takeback offer in a board game",
   schema: z.object({
     gameId: gameIdSchema,
@@ -164,6 +176,7 @@ const handleTakebackBoardGame = tool({
 
 const claimDrawBoardGame = tool({
   name: "claim_draw_board_game",
+  annotations: DESTRUCTIVE,
   description: "Claim a draw (e.g., 50-move rule or threefold repetition)",
   schema: z.object({ gameId: gameIdSchema }),
   handler: async ({ gameId }, { client }) => {
@@ -174,6 +187,7 @@ const claimDrawBoardGame = tool({
 
 const berserkBoardGame = tool({
   name: "berserk_board_game",
+  annotations: DESTRUCTIVE,
   description: "Go berserk in a tournament game (halve your clock for extra tournament points)",
   schema: z.object({ gameId: gameIdSchema }),
   handler: async ({ gameId }, { client }) => {

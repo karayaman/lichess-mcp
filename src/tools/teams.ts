@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, ADDITIVE, DESTRUCTIVE, READ_ONLY } from "../registry.js";
 
 const teamIdSchema = z.object({
   teamId: z.string().trim().min(1).describe("The team ID"),
@@ -7,6 +7,7 @@ const teamIdSchema = z.object({
 
 const getTeamInfo = tool({
   name: "get_team_info",
+  annotations: READ_ONLY,
   description: "Get information about a team",
   schema: teamIdSchema,
   handler: async ({ teamId }, { client }) =>
@@ -15,6 +16,7 @@ const getTeamInfo = tool({
 
 const getTeamMembers = tool({
   name: "get_team_members",
+  annotations: READ_ONLY,
   description: "Get members of a team",
   schema: z.object({
     teamId: z.string().trim().min(1),
@@ -26,6 +28,7 @@ const getTeamMembers = tool({
 
 const getTeamJoinRequests = tool({
   name: "get_team_join_requests",
+  annotations: READ_ONLY,
   description: "Get pending join requests for a team",
   schema: teamIdSchema,
   handler: async ({ teamId }, { client }) =>
@@ -34,6 +37,7 @@ const getTeamJoinRequests = tool({
 
 const joinTeam = tool({
   name: "join_team",
+  annotations: ADDITIVE,
   description: "Join a team",
   schema: z.object({
     teamId: z.string().trim().min(1),
@@ -47,6 +51,7 @@ const joinTeam = tool({
 
 const leaveTeam = tool({
   name: "leave_team",
+  annotations: DESTRUCTIVE,
   description: "Leave a team",
   schema: teamIdSchema,
   handler: async ({ teamId }, { client }) => {
@@ -57,6 +62,7 @@ const leaveTeam = tool({
 
 const kickUserFromTeam = tool({
   name: "kick_user_from_team",
+  annotations: DESTRUCTIVE,
   description: "Kick a user from a team",
   schema: z.object({
     teamId: z.string().trim().min(1),
@@ -72,6 +78,7 @@ const kickUserFromTeam = tool({
 
 const acceptJoinRequest = tool({
   name: "accept_join_request",
+  annotations: ADDITIVE,
   description: "Accept a join request to a team",
   schema: z.object({
     teamId: z.string().trim().min(1),
@@ -87,6 +94,7 @@ const acceptJoinRequest = tool({
 
 const declineJoinRequest = tool({
   name: "decline_join_request",
+  annotations: DESTRUCTIVE,
   description: "Decline a join request to a team",
   schema: z.object({
     teamId: z.string().trim().min(1),
@@ -102,6 +110,7 @@ const declineJoinRequest = tool({
 
 const searchTeams = tool({
   name: "search_teams",
+  annotations: READ_ONLY,
   description: "Search for teams",
   schema: z.object({
     text: z.string().trim().min(1).describe("Search text"),
@@ -115,6 +124,7 @@ const searchTeams = tool({
 
 const getTeamSwissTournaments = tool({
   name: "get_team_swiss_tournaments",
+  annotations: READ_ONLY,
   description: "Get Swiss tournaments for a team",
   schema: z.object({
     teamId: z.string().trim().min(1).describe("The team ID"),
@@ -132,6 +142,7 @@ const getTeamSwissTournaments = tool({
 
 const getAllTeams = tool({
   name: "get_all_teams",
+  annotations: READ_ONLY,
   description: "Get all public teams (paginated)",
   schema: z.object({
     page: z.number().int().min(1).default(1).describe("Page number"),
@@ -142,6 +153,7 @@ const getAllTeams = tool({
 
 const getTeamsOfUser = tool({
   name: "get_teams_of_user",
+  annotations: READ_ONLY,
   description: "Get all teams that a user is a member of",
   schema: z.object({
     username: z.string().trim().min(1).describe("Username of the player"),
@@ -152,6 +164,7 @@ const getTeamsOfUser = tool({
 
 const getTeamArenaTournaments = tool({
   name: "get_team_arena_tournaments",
+  annotations: READ_ONLY,
   description: "Get arena tournaments for a team",
   schema: z.object({
     teamId: z.string().trim().min(1).describe("The team ID"),
@@ -169,6 +182,7 @@ const getTeamArenaTournaments = tool({
 
 const pmAllTeamMembers = tool({
   name: "pm_all_team_members",
+  annotations: ADDITIVE,
   description: "Send a private message to all members of a team",
   schema: z.object({
     teamId: z.string().trim().min(1).describe("The team ID"),

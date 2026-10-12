@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { tool } from "../../registry.js";
+import { tool, ADDITIVE } from "../../registry.js";
 
 /**
  * POST /api/puzzle/batch/{angle} — "Set puzzles as solved and update ratings."
@@ -10,6 +10,7 @@ import { tool } from "../../registry.js";
  */
 export const submitPuzzleBatch = tool({
   name: "submit_puzzle_batch",
+  annotations: ADDITIVE,
   description:
     "Internal callback for the play_puzzle iframe to submit a completed rated batch and update the user's puzzle rating. Not exposed to the model — see solve_puzzle_batch for the model-callable equivalent. Requires the puzzle:write OAuth scope.",
   ui: { visibility: ["app"] },

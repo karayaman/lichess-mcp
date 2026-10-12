@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, ADDITIVE, DESTRUCTIVE, READ_ONLY } from "../registry.js";
 
 const usernameSchema = z.object({
   username: z.string().trim().min(1).describe("Username of the player"),
@@ -7,6 +7,7 @@ const usernameSchema = z.object({
 
 const getFollowing = tool({
   name: "get_following",
+  annotations: READ_ONLY,
   description: "Get the list of users you follow (NDJSON stream)",
   schema: z.object({}),
   handler: async (_args, { client }) => client.ndjson("/rel/following"),
@@ -14,6 +15,7 @@ const getFollowing = tool({
 
 const followUser = tool({
   name: "follow_user",
+  annotations: ADDITIVE,
   description: "Follow a player",
   schema: usernameSchema,
   handler: async ({ username }, { client }) => {
@@ -24,6 +26,7 @@ const followUser = tool({
 
 const unfollowUser = tool({
   name: "unfollow_user",
+  annotations: DESTRUCTIVE,
   description: "Unfollow a player",
   schema: usernameSchema,
   handler: async ({ username }, { client }) => {
@@ -34,6 +37,7 @@ const unfollowUser = tool({
 
 const blockUser = tool({
   name: "block_user",
+  annotations: DESTRUCTIVE,
   description: "Block a player",
   schema: usernameSchema,
   handler: async ({ username }, { client }) => {
@@ -44,6 +48,7 @@ const blockUser = tool({
 
 const unblockUser = tool({
   name: "unblock_user",
+  annotations: ADDITIVE,
   description: "Unblock a player",
   schema: usernameSchema,
   handler: async ({ username }, { client }) => {

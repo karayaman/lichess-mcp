@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, ADDITIVE, DESTRUCTIVE, READ_ONLY } from "../registry.js";
 
 const VARIANTS = [
   "standard",
@@ -19,6 +19,7 @@ const simulIdSchema = z.object({
 
 const getCurrentSimuls = tool({
   name: "get_current_simuls",
+  annotations: READ_ONLY,
   description: "Get current simuls",
   schema: z.object({}),
   handler: async (_args, { client }) => client.json("/simul"),
@@ -26,6 +27,7 @@ const getCurrentSimuls = tool({
 
 const createSimul = tool({
   name: "create_simul",
+  annotations: ADDITIVE,
   description: "Create a new simul",
   schema: z.object({
     name: z.string().trim().min(1).describe("Name of the simul"),
@@ -45,6 +47,7 @@ const createSimul = tool({
 
 const joinSimul = tool({
   name: "join_simul",
+  annotations: ADDITIVE,
   description: "Join a simul",
   schema: simulIdSchema,
   handler: async ({ simulId }, { client }) => {
@@ -55,6 +58,7 @@ const joinSimul = tool({
 
 const withdrawFromSimul = tool({
   name: "withdraw_from_simul",
+  annotations: DESTRUCTIVE,
   description: "Withdraw from a simul",
   schema: simulIdSchema,
   handler: async ({ simulId }, { client }) => {

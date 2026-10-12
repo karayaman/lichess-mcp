@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Chess } from "chess.js";
-import { tool } from "../../registry.js";
+import { tool, READ_ONLY } from "../../registry.js";
 import type {
   Color,
   PuzzleProps,
@@ -80,6 +80,7 @@ function specFromPayload(payload: LichessPuzzlePayload, fallbackId = "puzzle"): 
 
 export const playPuzzle = tool({
   name: "play_puzzle",
+  annotations: READ_ONLY,
   description:
     "Open an interactive chess puzzle in Claude Desktop. Drag pieces to solve; the UI validates each move against the Lichess solution and auto-plays the opponent's reply. " +
     "Default: today's daily puzzle. Use {next:true} for an unseen puzzle, {puzzleId} for a specific one, or {rated:true, nb:N, angle:'mix'} to start a RATED batch session that updates your Lichess puzzle rating when completed.",

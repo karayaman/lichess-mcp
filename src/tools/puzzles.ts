@@ -1,8 +1,9 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, ADDITIVE, READ_ONLY } from "../registry.js";
 
 const getDailyPuzzle = tool({
   name: "get_daily_puzzle",
+  annotations: READ_ONLY,
   description: "Get the daily puzzle",
   schema: z.object({}),
   handler: async (_args, { client }) => client.json("/puzzle/daily"),
@@ -10,6 +11,7 @@ const getDailyPuzzle = tool({
 
 const getPuzzleById = tool({
   name: "get_puzzle_by_id",
+  annotations: READ_ONLY,
   description: "Get a puzzle by its ID",
   schema: z.object({
     id: z.string().trim().min(1).describe("The puzzle ID"),
@@ -20,6 +22,7 @@ const getPuzzleById = tool({
 
 const getNextPuzzle = tool({
   name: "get_next_puzzle",
+  annotations: READ_ONLY,
   description: "Get the next puzzle for the authenticated user",
   schema: z.object({
     angle: z.string().optional().describe("Puzzle theme/angle"),
@@ -38,6 +41,7 @@ const getNextPuzzle = tool({
 
 const getPuzzleBatch = tool({
   name: "get_puzzle_batch",
+  annotations: READ_ONLY,
   description: "Get a batch of puzzles for offline solving",
   schema: z.object({
     angle: z.string().trim().min(1).describe("Puzzle theme/angle (use 'mix' for mixed)"),
@@ -57,6 +61,7 @@ const getPuzzleBatch = tool({
 
 const solvePuzzleBatch = tool({
   name: "solve_puzzle_batch",
+  annotations: ADDITIVE,
   description:
     "Submit solved puzzles from a batch back to Lichess. With `rated: true` (default) the result affects the user's puzzle rating. The response contains rounds[] with per-puzzle ratingDiff and the new glicko rating.",
   schema: z.object({
@@ -101,6 +106,7 @@ const solvePuzzleBatch = tool({
 
 const replayPuzzles = tool({
   name: "replay_puzzles",
+  annotations: READ_ONLY,
   description: "Replay puzzles by theme and number of days",
   schema: z.object({
     days: z.number().int().min(1).describe("Number of days to look back"),
@@ -112,6 +118,7 @@ const replayPuzzles = tool({
 
 const getPuzzleActivity = tool({
   name: "get_puzzle_activity",
+  annotations: READ_ONLY,
   description: "Get your puzzle activity",
   schema: z.object({
     max: z
@@ -130,6 +137,7 @@ const getPuzzleActivity = tool({
 
 const getPuzzleDashboard = tool({
   name: "get_puzzle_dashboard",
+  annotations: READ_ONLY,
   description: "Get your puzzle dashboard",
   schema: z.object({
     days: z
@@ -145,6 +153,7 @@ const getPuzzleDashboard = tool({
 
 const getPuzzleRace = tool({
   name: "get_puzzle_race",
+  annotations: READ_ONLY,
   description: "Get info about a puzzle race",
   schema: z.object({
     raceId: z.string().trim().min(1).describe("ID of the puzzle race"),
@@ -155,6 +164,7 @@ const getPuzzleRace = tool({
 
 const createPuzzleRace = tool({
   name: "create_puzzle_race",
+  annotations: ADDITIVE,
   description: "Create a new puzzle race",
   schema: z.object({}),
   handler: async (_args, { client }) => {
@@ -165,6 +175,7 @@ const createPuzzleRace = tool({
 
 const getPuzzleStormDashboard = tool({
   name: "get_puzzle_storm_dashboard",
+  annotations: READ_ONLY,
   description: "Get puzzle storm dashboard for a user",
   schema: z.object({
     username: z.string().trim().min(1).describe("Username to get storm dashboard for"),

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AnyToolDefinition, tool } from "../registry.js";
+import { AnyToolDefinition, tool, READ_ONLY } from "../registry.js";
 import type { LichessClient } from "../http/client.js";
 
 export const EXPLORER_BASE = "https://explorer.lichess.org";
@@ -56,6 +56,7 @@ export function fetchLichessExplorer<T = unknown>(
 
 const getMastersOpenings = tool({
   name: "get_masters_openings",
+  annotations: READ_ONLY,
   description: "Get opening positions from master (OTB) games",
   schema: z.object({
     fen: z.string().optional().describe("FEN of the position (default: starting position)"),
@@ -70,6 +71,7 @@ const getMastersOpenings = tool({
 
 const getLichessOpenings = tool({
   name: "get_lichess_openings",
+  annotations: READ_ONLY,
   description: "Get opening positions from Lichess games",
   schema: z.object({
     variant: z.string().optional().describe("Chess variant"),
@@ -89,6 +91,7 @@ const getLichessOpenings = tool({
 
 const getPlayerOpenings = tool({
   name: "get_player_openings",
+  annotations: READ_ONLY,
   description: "Get opening statistics for a specific Lichess player",
   schema: z.object({
     player: z.string().trim().min(1).describe("Lichess username"),
@@ -114,6 +117,7 @@ const getPlayerOpenings = tool({
 
 const getMasterGame = tool({
   name: "get_master_game",
+  annotations: READ_ONLY,
   description: "Get a master game from the opening explorer (returns PGN)",
   schema: z.object({
     gameId: z.string().trim().min(1).describe("The game ID"),
