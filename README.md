@@ -18,36 +18,49 @@ The server enables:
 - Joining tournaments and teams
 - Interacting with other players
 
-## Configuration
+## Lichess Token
 
-The Lichess API token can be set in two ways:
+Create a token at https://lichess.org/account/oauth/token. Tick only the scopes you need. Some tools act on your account (sending messages, creating challenges, upgrading to a bot account), and the model reads text other Lichess users wrote. The token's scopes limit what a misled model can do.
 
-1. Environment variables: Add it to your `.env` file in the project root or set it directly:
+Ways to give the server your token, most secure first:
+
+1. **Recommended: keep it in your OS secret store and pass it in at launch.** The token never sits in a plaintext file or in the chat.
+
+   macOS (Keychain). Store it once; the command prompts for the token:
 
    ```bash
-   LICHESS_TOKEN=your-lichess-api-token
+   security add-generic-password -s lichess-mcp -a "$USER" -w
    ```
 
-2. Using the `set_token` tool during runtime:
+   Then have your MCP client start the server like this:
 
-   ```typescript
-   set_token({
-     token: "your-lichess-api-token"
-   });
+   ```json
+   "lichess": {
+     "command": "/bin/sh",
+     "args": ["-c", "LICHESS_TOKEN=\"$(security find-generic-password -s lichess-mcp -w)\" exec lichess-mcp"]
+   }
    ```
 
-The token can be generated at https://lichess.org/account/oauth/token
+   Linux (libsecret): store it with `secret-tool store --label="Lichess MCP" service lichess-mcp` and read it with `$(secret-tool lookup service lichess-mcp)` in the same way. A password manager CLI works too, for example `$(op read "op://Private/Lichess/token")` with 1Password.
+
+2. **The `env` block of your MCP client's config.** Simple, but the token sits in plaintext in that config file. Don't share or commit the file.
+
+   ```json
+   "lichess": {
+     "command": "lichess-mcp",
+     "env": { "LICHESS_TOKEN": "your-lichess-api-token" }
+   }
+   ```
+
+3. **A `.env` file** containing `LICHESS_TOKEN=your-lichess-api-token`. Also plaintext. The server reads `.env` from the directory it starts in, and MCP clients often start it somewhere else, so this suits running from a clone with `npm start`. `.env` is in `.gitignore`; keep it private with `chmod 600 .env`.
+
+4. **Not recommended: the `set_token` tool.** The token passes through the conversation, so it's stored in your chat history and sent to the model provider. If you use it for a quick test, use a short-lived token and revoke it afterwards at https://lichess.org/account/oauth/token.
 
 ## Available Tools
 
 ### 1. Account Management
 
 ```typescript
-// Set your Lichess API token
-set_token({
-  token: "your-lichess-api-token"
-});
-
 // Get your Lichess profile
 get_my_profile();
 
@@ -194,12 +207,7 @@ npx -y @smithery/cli install @karayaman/lichess-mcp --client claude
    npm install
    ```
 
-3. Configure environment variables:
-   Create a `.env` file in the root directory:
-
-   ```bash
-   LICHESS_TOKEN=your-lichess-api-token
-   ```
+3. Set up your token: see [Lichess Token](#lichess-token).
 
 4. Build the project:
 
@@ -233,17 +241,14 @@ To use this MCP server with Claude Desktop:
    {
      "mcpServers": {
        "lichess": {
-         "command": "lichess-mcp",
-         "env": {
-           "LICHESS_TOKEN": "your-lichess-api-token",
-           "DEBUG": "*"
-         }
+         "command": "/bin/sh",
+         "args": ["-c", "LICHESS_TOKEN=\"$(security find-generic-password -s lichess-mcp -w)\" exec lichess-mcp"]
        }
      }
    }
    ```
 
-   Note: Replace `your-lichess-api-token` with your actual Lichess API token. The `DEBUG` environment variable is optional but helpful for troubleshooting.
+   This reads the token from the macOS Keychain (see [Lichess Token](#lichess-token) for storing it, and for the other options). To troubleshoot, add `"env": { "DEBUG": "*" }`.
 
 3. (Optional) You can add other MCP servers as well:
 
@@ -260,10 +265,8 @@ To use this MCP server with Claude Desktop:
          ]
        },
        "lichess": {
-         "command": "lichess-mcp",
-         "env": {
-           "LICHESS_TOKEN": "your-lichess-api-token"
-         }
+         "command": "/bin/sh",
+         "args": ["-c", "LICHESS_TOKEN=\"$(security find-generic-password -s lichess-mcp -w)\" exec lichess-mcp"]
        }
      }
    }
