@@ -169,6 +169,8 @@ The other toolsets are `board`, `bot`, `bulk-pairings`, `engine`, `challenges`, 
 
 Set it alongside the token, for example `"env": { "LICHESS_TOOLSETS": "core,arena,swiss" }` in your MCP client's config.
 
+The model can also turn toolsets on mid-session with the `enable_toolset` tool, whose description lists the toolsets that are off, one line each. This needs a client that refreshes its tool list when the server says it changed; otherwise set `LICHESS_TOOLSETS` and restart. Because the model can turn any toolset on, `LICHESS_TOOLSETS` saves context but doesn't restrict what the model can do. Your token's scopes do that (see [Lichess Token](#lichess-token)).
+
 ## Chess Notation
 
 ### Move Formats
