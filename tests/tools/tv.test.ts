@@ -115,3 +115,25 @@ describe("get_tv_channel_feed", () => {
     ).toThrow();
   });
 });
+
+describe("get_tv_feed against a stream that never closes", () => {
+  it("returns the first event instead of waiting for the body to end", async () => {
+    const mock = installFetchMock();
+    mock.respondOpenStream(["\n", '{"type":"first"}\n{"type":"second"}\n']);
+
+    const result = await findTool("get_tv_feed").handler({}, makeContext());
+
+    expect(result).toEqual({ type: "first" });
+  }, 2000);
+});
+
+describe("get_tv_channel_feed against a stream that never closes", () => {
+  it("returns the first event instead of waiting for the body to end", async () => {
+    const mock = installFetchMock();
+    mock.respondOpenStream(["\n", '{"type":"first"}\n{"type":"second"}\n']);
+
+    const result = await findTool("get_tv_channel_feed").handler({ channel: "blitz" }, makeContext());
+
+    expect(result).toEqual({ type: "first" });
+  }, 2000);
+});

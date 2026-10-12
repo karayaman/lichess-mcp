@@ -97,10 +97,7 @@ const streamEvents = tool({
   description: "Stream incoming events (challenges and game starts) for the current user",
   schema: z.object({}),
   handler: async (_args, { client }) => {
-    const response = await client.request("/stream/event");
-    const text = await response.text();
-    const firstLine = text.split("\n").find((l) => l.trim()) ?? "";
-    return firstLine ? (JSON.parse(firstLine) as object) : {};
+    return (await client.firstStreamEvent<object>("/stream/event")) ?? {};
   },
 });
 
@@ -136,12 +133,9 @@ const streamBoardGame = tool({
   description: "Stream the state of a board game (returns first event)",
   schema: z.object({ gameId: gameIdSchema }),
   handler: async ({ gameId }, { client }) => {
-    const response = await client.request(
+    return (await client.firstStreamEvent<object>(
       `/board/game/stream/${encodeURIComponent(gameId)}`,
-    );
-    const text = await response.text();
-    const firstLine = text.split("\n").find((l) => l.trim()) ?? "";
-    return firstLine ? (JSON.parse(firstLine) as object) : {};
+    )) ?? {};
   },
 });
 

@@ -14,6 +14,8 @@ export interface FetchMock extends MockInstance {
   respondNdjson(items: unknown[]): void;
   respondPgn(pgn: string): void;
   respondStatus(status: number, body?: string): void;
+  /** Queues a body that emits `chunks` and never closes, like a Lichess stream. */
+  respondOpenStream(chunks: string[]): void;
 }
 
 function makeResponse(body: BodyInit | null, init: ResponseInit = {}): Response {
@@ -56,6 +58,18 @@ export function installFetchMock(): FetchMock {
 
   spy.respondStatus = (status: number, body = "") => {
     spy.mockResolvedValueOnce(new Response(body, { status }));
+  };
+
+  spy.respondOpenStream = (chunks: string[]) => {
+    const encoder = new TextEncoder();
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        for (const c of chunks) controller.enqueue(encoder.encode(c));
+      },
+    });
+    spy.mockResolvedValueOnce(
+      makeResponse(body, { headers: { "content-type": "application/x-ndjson" } }),
+    );
   };
 
   vi.stubGlobal("fetch", spy);

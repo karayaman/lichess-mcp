@@ -24,10 +24,7 @@ const streamBotGame = tool({
   description: "Stream the state of a bot game (returns first event)",
   schema: z.object({ gameId: gameIdSchema }),
   handler: async ({ gameId }, { client }) => {
-    const response = await client.request(`/bot/game/stream/${encodeURIComponent(gameId)}`);
-    const text = await response.text();
-    const firstLine = text.split("\n").find((l) => l.trim()) ?? "";
-    return firstLine ? (JSON.parse(firstLine) as object) : {};
+    return (await client.firstStreamEvent<object>(`/bot/game/stream/${encodeURIComponent(gameId)}`)) ?? {};
   },
 });
 
