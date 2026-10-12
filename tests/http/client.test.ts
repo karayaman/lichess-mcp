@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { LichessClient } from "../../src/http/client.js";
 import { TokenStore } from "../../src/http/token-store.js";
 import { LichessApiError } from "../../src/http/errors.js";
@@ -49,32 +49,6 @@ describe("LichessClient.request", () => {
   it("throws LichessApiError on non-ok response", async () => {
     mockFetch(new Response('{"error":"Not found"}', { status: 404 }));
     await expect(makeClient().request("/missing")).rejects.toBeInstanceOf(LichessApiError);
-  });
-
-  it("retries on 429 and succeeds on second attempt (exponential backoff)", async () => {
-    const spy = vi
-      .fn()
-      .mockResolvedValueOnce(new Response("", { status: 429 }))
-      .mockResolvedValueOnce(ok({ ok: true }));
-    vi.stubGlobal("fetch", spy);
-    const response = await makeClient().request("/account");
-    expect(response.ok).toBe(true);
-    expect(spy).toHaveBeenCalledTimes(2);
-  });
-
-  it("uses Retry-After header value as backoff when present", async () => {
-    const retryResponse = new Response("", {
-      status: 429,
-      headers: { "retry-after": "0.001" },
-    });
-    const spy = vi
-      .fn()
-      .mockResolvedValueOnce(retryResponse)
-      .mockResolvedValueOnce(ok({ ok: true }));
-    vi.stubGlobal("fetch", spy);
-    const response = await makeClient().request("/account");
-    expect(response.ok).toBe(true);
-    expect(spy).toHaveBeenCalledTimes(2);
   });
 
   it("throws LichessTokenMissingError when no token set", async () => {
@@ -177,5 +151,92 @@ describe("LichessApiError", () => {
     const response = new Response("", { status: 418, statusText: "I'm a teapot" });
     const err = await LichessApiError.fromResponse(response);
     expect(err.message).toBe("I'm a teapot");
+  });
+});
+
+describe("LichessClient retries", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  function status(code: number, headers: Record<string, string> = {}) {
+    return new Response("", { status: code, headers });
+  }
+
+  /** fetch mock that returns each response in turn, then repeats the last one. */
+  function fetchSequence(...responses: Array<() => Response>) {
+    let i = 0;
+    const spy = vi.fn(async () => responses[Math.min(i++, responses.length - 1)]());
+    vi.stubGlobal("fetch", spy);
+    return spy;
+  }
+
+  it("waits 10 seconds after a 429 before retrying", async () => {
+    const spy = fetchSequence(() => status(429), () => ok({ ok: true }));
+    const done = makeClient().request("/account");
+    await vi.advanceTimersByTimeAsync(9_999);
+    expect(spy).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(1);
+    expect((await done).ok).toBe(true);
+    expect(spy).toHaveBeenCalledTimes(2);
+  });
+
+  it("doubles the 429 wait (10, 20, 40, 80 s), then gives up within 3 minutes", async () => {
+    const spy = fetchSequence(() => status(429));
+    const done = makeClient().request("/account");
+    const outcome = done.then(() => "resolved", (e: unknown) => e);
+    const calls: number[] = [];
+    for (const wait of [10_000, 20_000, 40_000, 80_000]) {
+      await vi.advanceTimersByTimeAsync(wait - 1);
+      calls.push(spy.mock.calls.length);
+      await vi.advanceTimersByTimeAsync(1);
+    }
+    expect(calls).toEqual([1, 2, 3, 4]);
+    const error = await outcome;
+    expect(error).toBeInstanceOf(LichessApiError);
+    expect((error as LichessApiError).status).toBe(429);
+    expect(spy).toHaveBeenCalledTimes(5);
+  });
+
+  it("retries a POST after 429, since Lichess did not process it", async () => {
+    const spy = fetchSequence(() => status(429), () => ok({ ok: true }));
+    const done = makeClient().postForm("/challenge/alice", { rated: false });
+    await vi.advanceTimersByTimeAsync(10_000);
+    expect((await done).ok).toBe(true);
+    expect(spy).toHaveBeenCalledTimes(2);
+  });
+
+  it("honors a Retry-After longer than the scheduled wait", async () => {
+    const spy = fetchSequence(() => status(429, { "retry-after": "30" }), () => ok({ ok: true }));
+    const done = makeClient().request("/account");
+    await vi.advanceTimersByTimeAsync(29_999);
+    expect(spy).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(1);
+    expect((await done).ok).toBe(true);
+  });
+
+  it("gives up at once when Retry-After is beyond the 3-minute budget", async () => {
+    const spy = fetchSequence(() => status(429, { "retry-after": "600" }));
+    await expect(makeClient().request("/account")).rejects.toBeInstanceOf(LichessApiError);
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it("retries a GET after 503", async () => {
+    const spy = fetchSequence(() => status(503), () => ok({ ok: true }));
+    const done = makeClient().request("/account");
+    await vi.runAllTimersAsync();
+    expect((await done).ok).toBe(true);
+    expect(spy).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not retry a POST after 503, which may have been processed", async () => {
+    const spy = fetchSequence(() => status(503), () => ok({ ok: true }));
+    await expect(makeClient().postForm("/inbox/alice", { text: "hi" })).rejects.toBeInstanceOf(
+      LichessApiError,
+    );
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 });
