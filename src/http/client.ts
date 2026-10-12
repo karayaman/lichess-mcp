@@ -5,8 +5,12 @@ import { TokenStore } from "./token-store.js";
 const DEFAULT_BASE_URL = "https://lichess.org/api";
 /** For endpoints served from the site root rather than /api (e.g. /team/{id}/join). */
 export const SITE_BASE_URL = "https://lichess.org";
-const RETRY_STATUSES = new Set([429, 503]);
-const MAX_RETRIES = 2;
+/** A 429 waits 10 s, then 20, 40, 80, and gives up once the next wait would pass 3 minutes. */
+const RATE_LIMIT_FIRST_WAIT_MS = 10_000;
+const RATE_LIMIT_BUDGET_MS = 180_000;
+const UNAVAILABLE_RETRIES = 2;
+/** A 503 may hide a write Lichess completed, so only these methods are retried on it. */
+const IDEMPOTENT_METHODS = new Set(["GET", "HEAD", "PUT", "DELETE", "OPTIONS"]);
 
 export interface RequestOptions extends RequestInit {
   /** Set to false to skip the Authorization header (e.g., /token/test). */
@@ -35,18 +39,31 @@ export class LichessClient {
 
     const url = `${baseUrl ?? this.baseUrl}${path}`;
 
-    let attempt = 0;
+    const idempotent = IDEMPOTENT_METHODS.has((init.method ?? "GET").toUpperCase());
+    let rateLimited = 0;
+    let rateLimitWaited = 0;
+    let unavailable = 0;
     while (true) {
       const response = await fetch(url, { ...init, headers });
       if (response.ok) return response;
 
-      if (RETRY_STATUSES.has(response.status) && attempt < MAX_RETRIES) {
-        attempt++;
+      if (response.status === 429) {
         const retryAfter = Number(response.headers.get("retry-after"));
-        const backoff = Number.isFinite(retryAfter) && retryAfter > 0
-          ? retryAfter * 1000
-          : 1000 * 2 ** attempt;
-        await sleep(backoff);
+        const wait = Math.max(
+          RATE_LIMIT_FIRST_WAIT_MS * 2 ** rateLimited,
+          Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : 0,
+        );
+        if (rateLimitWaited + wait <= RATE_LIMIT_BUDGET_MS) {
+          rateLimited++;
+          rateLimitWaited += wait;
+          await sleep(wait);
+          continue;
+        }
+      }
+
+      if (response.status === 503 && idempotent && unavailable < UNAVAILABLE_RETRIES) {
+        unavailable++;
+        await sleep(1000 * 2 ** unavailable);
         continue;
       }
 
