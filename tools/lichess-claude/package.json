@@ -1,0 +1,12 @@
+{
+  "name": "lichess-claude-analysis",
+  "version": "0.1.0",
+  "description": "Prototype: stream Lichess account events and send finished game moves to Claude for analysis",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
