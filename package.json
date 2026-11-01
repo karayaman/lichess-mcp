@@ -28,18 +28,18 @@
   },
   "dependencies": {
     "@modelcontextprotocol/ext-apps": "^1.7.1",
-    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@modelcontextprotocol/sdk": "^1.32.2",
     "chess.js": "^1.4.0",
     "dotenv": "^16.3.1",
-    "zod": "^4.3.6"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/node": ">=22.12.0",
-    "@vitest/coverage-v8": "^5.0.4",
+    "@vitest/coverage-v8": "^5.0.5",
     "chessground": "^9.2.1",
     "typescript": "^5.3.3",
-    "vite": "^8.3.4",
-    "vite-plugin-singlefile": "^2.3.3",
+    "vite": "^8.3.5",
+    "vite-plugin-singlefile": "^2.3.4",
     "vitest": "^5.0.4"
   }
 }
